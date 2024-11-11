@@ -5,7 +5,7 @@ from Cogs.Stat import RecordListView
 from module.database import getAllCharacterName, getCharacterName, searchCharacter
 from module.embed import makeErrorEmbed
 from module.games import getRecordOptions
-from module.player import getRecord, getUser, getUserNickname
+from module.player import getRecord
 from module.ranking import getRanking_Artisan, getRanking_LP
 from module.variables import getTierName
 

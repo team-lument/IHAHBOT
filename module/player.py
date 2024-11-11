@@ -22,12 +22,6 @@ async def searchUser(query: str=None):
 			r = await res.json()
 			return r
 
-async def getUserStatistics(userId: int):
-	async with aiohttp.ClientSession(headers=AYAGG_HEADER) as session:
-		async with session.get(AYAGG_API_URL + f"/player/{userId}/statistics") as res:
-			r = await res.json()
-			return r
-
 async def getUser(*, nick: str=None, userId: int=None):
 	if nick:
 		return [nick, await getUserId(nick)]
@@ -87,8 +81,17 @@ async def getUserLevel(userId: int):
 				return data
 	return n[0]
 
-async def getUserStatistics(userId: int):
+async def getUserStatistics(userId: int, season: int=None):
+	result = {}
 	async with aiohttp.ClientSession(headers=AYAGG_HEADER) as session:
 		async with session.get(AYAGG_API_URL + f"/player/{userId}/statistics") as res:
 			r = await res.json()
-			return r
+			result['overall'] = r['overall']
+		async with session.get(AYAGG_API_URL + f"/player/{userId}/statistics{f'?seasonId={season}' if season else ''}") as res:
+			r = await res.json()
+			result['season'] = r['overall']
+		async with session.get(AYAGG_API_URL + f"/queues/by-player/{userId}") as res:
+			r = await res.json()
+			for x in r['result']:
+				if x['seasonId'] == season: result['seasonQueueData'] = x
+		return result

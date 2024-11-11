@@ -1,13 +1,13 @@
 import os, sqlite3, logging
 from PIL import Image, ImageDraw, ImageFont
-# from module.variables import getTierName
-# from .database import *
+from module.variables import getTierName, getSeason
+from module.database import *
 import urllib.request
 import plotly.express as px
 from pandas import DataFrame
 
-from variables import getSeason, getTierName
-from database import *
+# from variables import getSeason, getTierName
+# from database import *
 
 logger = logging.getLogger("ihahbot.main")
 
@@ -374,13 +374,14 @@ def generateMMRHistoryImage(userId: int, x: dict, tier: str):
 	fig.write_image("Match/mmr-history/3015759.png")
 
 def generateStatImage(user: list, x: dict):
+	print(x)
 	image = Image.open("image/Background/Tier/_Background.png")
 	draw = ImageDraw.Draw(image)
 	
-	userId = user[0]; userName = user[1]; tier = getTierName(x['mmr'])
+	userId = user[0]; userName = user[1]; tier = getTierName(x['seasonQueueData']['mmr'])
 
 	draw.text((75, 25), f"{userName}", font=ImageFont.truetype('Freesentation-7Bold.ttf', size=40), fill="#FFFFFF")
-	draw.text((30, 75), f"669전 83승 (12.4%)", font=ImageFont.truetype('Freesentation-7Bold.ttf', size=20), fill="#959595")
+	draw.text((30, 75), f"{x['overall']['plays']}전 {x['overall']['wins']}승 ({round((x['overall']['wins']/x['overall']['plays'])*100, 1)}%)", font=ImageFont.truetype('Freesentation-7Bold.ttf', size=20), fill="#959595")
 
 	tierBackground = Image.open(f"image/Background/Tier/{tier[2].capitalize()}.png")
 	image.paste(tierBackground, (25, 112), tierBackground)
@@ -388,10 +389,10 @@ def generateStatImage(user: list, x: dict):
 	statusTitle  = ImageFont.truetype('Freesentation-7Bold.ttf', size=13)
 	statusObject = ImageFont.truetype('Freesentation-7Bold.ttf', size=16)
 
-	draw.text((125, 135), f"{getSeason(x['seasonId'])}", font=ImageFont.truetype('Freesentation-7Bold.ttf', size=18), fill=(206, 206, 206))
+	draw.text((125, 135), f"{getSeason(x['seasonQueueData']['seasonId'])}", font=ImageFont.truetype('Freesentation-7Bold.ttf', size=18), fill=(206, 206, 206))
 	draw.text((125, 160), f"{tier[0]}", font=ImageFont.truetype('Freesentation-7Bold.ttf', size=27), fill="#FFFFFF")
-	draw.text((123, 190), f"{x['mmr']}", font=ImageFont.truetype('Freesentation-7Bold.ttf', size=40), fill=rankTierColors[tier[2]])
-	draw.text((240+(-23*(5-len(f"{x['mmr']}"))), 190), "RP", font=ImageFont.truetype('Freesentation-7Bold.ttf', size=40), fill="#FFFFFF")
+	draw.text((123, 190), f"{x['seasonQueueData']['mmr']}", font=ImageFont.truetype('Inter-Bold.ttf', size=40), fill=rankTierColors[tier[2]])
+	draw.text((255+(-30*(5-len(f"{x['seasonQueueData']['mmr']}")))+(0 if len(f"{x['seasonQueueData']['mmr']}") >= 4 else 10), 200), "RP", font=ImageFont.truetype('Inter-Bold.ttf', size=30), fill="#FFFFFF")
 	
 	draw.text(( 45, 270), "평균 K·D·A", font=statusTitle, fill="#E0E0E0")
 	draw.text((165, 270), "승률", font=statusTitle, fill="#E0E0E0")
@@ -401,12 +402,12 @@ def generateStatImage(user: list, x: dict):
 	draw.text((230, 340), "플레이 시간", font=statusTitle, fill="#E0E0E0")
 	draw.text((315, 155), "RP 변동 이력", font=statusTitle, fill="#E0E0E0")
 
-	draw.text(( 45, 285), "1.1 / 1.9 / 2.5", font=statusObject, fill="#FFFFFF")
-	draw.text((165, 285), "12.5%", font=statusObject, fill="#FFFFFF")
-	draw.text((230, 285), "43.2%", font=statusObject, fill="#FFFFFF")
-	draw.text(( 45, 355), "40", font=statusObject, fill="#FFFFFF")
-	draw.text((135, 355), "5", font=statusObject, fill="#FFFFFF")
-	draw.text((230, 355), "8.5시간", font=statusObject, fill="#FFFFFF")
+	draw.text(( 45, 285), f"{round(x['season']['kda'][0]/x['seasonQueueData']['totalPlays'], 1)} · {round(x['season']['kda'][1]/x['seasonQueueData']['totalPlays'], 1)} · {round(x['season']['kda'][2]/x['seasonQueueData']['totalPlays'], 1)}", font=statusObject, fill="#FFFFFF")
+	draw.text((165, 285), f"{round((x['seasonQueueData']['totalWins']/x['seasonQueueData']['totalPlays'])*100, 1)}%", font=statusObject, fill="#FFFFFF")
+	draw.text((230, 285), f"{round(x['season']['halfRate']*100, 1)}%", font=statusObject, fill="#FFFFFF")
+	draw.text(( 45, 355), f"{x['seasonQueueData']['totalPlays']}", font=statusObject, fill="#FFFFFF")
+	draw.text((135, 355), f"{x['seasonQueueData']['totalWins']}", font=statusObject, fill="#FFFFFF")
+	draw.text((230, 355), f"{x['season']['playTime']}", font=statusObject, fill="#FFFFFF")
 
 	foreground = Image.new("RGBA", (image.width, image.height), (0, 0, 0, 0))
 	tierSmallBackground = Image.open(f"image/Tier/Small/{tier[2].capitalize()}.png").convert("RGBA")
@@ -426,8 +427,6 @@ def generateStatImage(user: list, x: dict):
 	image = Image.alpha_composite(image, foreground)
 
 	image.save(f"Match/Stat/{userId}.png")
-
-generateStatImage([3015759, "샨티"], {"seasonId": 27, "mmr": 1390})
 
 def getItemSlot(itemId: int):
 	conn = sqlite3.connect('ERData/Item.db')

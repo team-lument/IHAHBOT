@@ -64,7 +64,7 @@ class Stat(commands.Cog):
 		user: str, hide: bool = False
 	):
 		nick = user.replace("⭐", "").replace("🛠️", "").replace("📹", "")
-		userId = await getUserId(nick); editMsg = False
+		userId = await getUserId(nick)
 		await i.response.defer(ephemeral=hide)
 		if not userId:
 			userNames = await searchUser(nick); lists = []
@@ -82,15 +82,9 @@ class Stat(commands.Cog):
 			else:
 				nick = userNames['result'][0]['name']
 				userId = userNames['result'][0]['id']
-				editMsg = True
-		embed = disnake.Embed(
-			title=f"{nick}님의 전적",
-			description="원하는 기록을 선택하고 전적을 확인해보세요!"
-		)
-		embed.set_footer(text="Data from aya.gg")
+		generateStatImage([userId, nick], await getUserStatistics(userId, 27))
 		record = await getRecord(userId)
-		if editMsg: await i.edit_original_message(embed=embed, view=RecordListView(i.user.id, await getRecordOptions(record['result'], i), userId, record['page']))
-		else: await i.edit_original_message(embed=embed, view=RecordListView(i.user.id, await getRecordOptions(record['result'], i), userId, record['page']))
+		await i.edit_original_message(embed=None, file=disnake.File(fp=f"Match/Stat/{userId}.png", filename=f"Stat-{userId}.png"), view=RecordListView(i.user.id, await getRecordOptions(record['result'], i), userId, record['page']))
 
 class userSearchView(disnake.ui.View):
 	def __init__(self, options: list[disnake.SelectOption], userId: int):
@@ -109,8 +103,6 @@ class userSearch(disnake.ui.Select):
 		if self._userId == i.user.id:
 			nick = self.values[0]
 			userId = await getUserId(nick)
-			statistics = await getUserStatistics(userId)
-			generateStatImage(statistics)
 			embed = disnake.Embed(
 				title=f"{nick}님의 전적",
 				description="원하는 기록을 선택하고 전적을 확인해보세요!"

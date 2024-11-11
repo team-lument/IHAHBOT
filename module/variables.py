@@ -15,21 +15,21 @@ def getTeamType(teamType: int):
 	elif teamType == 3: return '스쿼드'
 	elif teamType == 4: return '코발트'
 
-roma = ["", "I", "II", "III", "IV"]
+roma = ["I", "II", "III", "IV"]
 
 def getTierName(mmr: int, demigod: bool = False, eternity: bool = False):
 	if mmr < 600:
-		return [f"아이언 {roma[ceil(mmr/150)]}", f"{mmr%150}점", "iron"]
+		return [f"아이언 {roma[4-ceil(mmr/150)]}", f"{mmr%150}점", "iron"]
 	elif mmr < 1400:
-		return [f"브론즈 {roma[ceil((mmr-600)/200)]}", f"{(mmr-600)%200}점", "bronze"]
+		return [f"브론즈 {roma[4-ceil((mmr-600)/200)]}", f"{(mmr-600)%200}점", "bronze"]
 	elif mmr < 2400:
-		return [f"실버 {roma[ceil((mmr-1400)/250)]}", f"{(mmr-1400)%250}점", "silver"]
+		return [f"실버 {roma[4-ceil((mmr-1400)/250)]}", f"{(mmr-1400)%250}점", "silver"]
 	elif mmr < 3600:
-		return [f"골드 {roma[ceil((mmr-2400)/300)]}", f"{(mmr-2400)%300}점", "gold"]
+		return [f"골드 {roma[4-ceil((mmr-2400)/300)]}", f"{(mmr-2400)%300}점", "gold"]
 	elif mmr < 5000:
-		return [f"플래티넘 {roma[ceil((mmr-3600)/350)]}", f"{(mmr-3600)%350}점", "platinum"]
+		return [f"플래티넘 {roma[4-ceil((mmr-3600)/350)]}", f"{(mmr-3600)%350}점", "platinum"]
 	elif mmr < 6400:
-		return [f"다이아몬드 {roma[ceil((mmr-5000)/350)]}", f"{(mmr-5000)%350}점", "diamond"]
+		return [f"다이아몬드 {roma[4-ceil((mmr-5000)/350)]}", f"{(mmr-5000)%350}점", "diamond"]
 	elif mmr < 6800:
 		return [f"메테오라이트", f"{mmr-6400}점", "meteorite"]
 	else:
