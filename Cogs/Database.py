@@ -75,7 +75,7 @@ class ChangeView_Story(disnake.ui.Button):
 		story = await getCharacterStory(self._characterId)
 		embed = disnake.Embed(
 			title=fullName,
-			description=f"**\"{story[0]}\"**\n\n{story[1].replace('\\n', '\n')}"
+			description=f"**\"{story[0]}\"**\n\n{story[1].replace('{{n}}', '\n')}"
 		)
 		embed.set_image(file=disnake.File(fp=f"image/CharacterInfo/{characterName}.png", filename=f"IHBv4_ER_{characterName}_Background.png"))
 		await i.response.edit_message(embed=embed, view=StoryView(await makeSkinList(self._characterId), self._characterId))
