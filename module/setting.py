@@ -20,9 +20,9 @@ def setMemberSetting(userId: int, guildId: int, key: str, value: str):
 	if key == "locale":
 		c.execute(f"UPDATE guildedUser SET locale='{value}' WHERE userId={userId} AND guildId={guildId}")
 	if key == "hideNick":
-		c.execute(f"UPDATE guildedUser SET hideNick={1 if value == "true" else 0} WHERE userId={userId} AND guildId={guildId}")
+		c.execute(f"UPDATE guildedUser SET hideNick={1 if value == 'true' else 0} WHERE userId={userId} AND guildId={guildId}")
 	if key == "hideGameId":
-		c.execute(f"UPDATE guildedUser SET hideGameId={1 if value == "true" else 0} WHERE userId={userId} AND guildId={guildId}")
+		c.execute(f"UPDATE guildedUser SET hideGameId={1 if value == 'true' else 0} WHERE userId={userId} AND guildId={guildId}")
 	conn.commit()
 	conn.close()
 

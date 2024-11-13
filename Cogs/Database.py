@@ -48,7 +48,7 @@ class Skin(disnake.ui.Select):
 			embed.add_field(name="주요 획득 경로", value=f"{skinTypeOptions[skinType].replace('{0}', f'{var0}').replace('{1}', f'{var1}').replace('{2}', f'{var2}')}\n-# 획득 경로 및 가격은 차이가 있을 수 있어요.\n-# 일부 스킨은 제작소에서도 획득할 수 있어요.", inline=False)
 		else:
 			embed.add_field(name="주요 획득 경로", value="없음\n-# 일부 스킨은 제작소에서도 획득할 수 있어요.")
-		embed.set_image(url=f"https://aya.gg/images/characters/CharFull_{(await getCharacterName(characterId, "en")).replace(" ", "").replace("&", "")}_S{str(skinId)[4:7]}.webp")
+		embed.set_image(url=f"https://aya.gg/images/characters/CharFull_{(await getCharacterName(characterId, 'en')).replace(' ', '').replace('&', '')}_S{str(skinId)[4:7]}.webp")
 		await i.edit_original_message(embed=embed, view=SkinView(self._skinList, characterId))
 
 class ChangeView_Skin(disnake.ui.Button):

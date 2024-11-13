@@ -93,7 +93,7 @@ class Setting(commands.Cog):
 				setMemberSetting(i.user.id, i.guild.id, key, value)
 				embed = disnake.Embed(
 					title=":white_check_mark: 설정 성공",
-					description=f"`{i.guild.name}` 서버의 `닉네임 가리기` 설정을 **{'켰어요' if value == "true" else '껐어요'}**."
+					description=f"`{i.guild.name}` 서버의 `닉네임 가리기` 설정을 **{'켰어요' if value == 'true' else '껐어요'}**."
 				)
 				await i.response.send_message(embed=embed, ephemeral=True)
 				return
@@ -105,7 +105,7 @@ class Setting(commands.Cog):
 				setMemberSetting(i.user.id, i.guild.id, key, value)
 				embed = disnake.Embed(
 					title=":white_check_mark: 설정 성공",
-					description=f"`{i.guild.name}` 서버의 `게임 ID 가리기` 설정을 **{'켰어요' if value == "true" else '껐어요'}**."
+					description=f"`{i.guild.name}` 서버의 `게임 ID 가리기` 설정을 **{'켰어요' if value == 'true' else '껐어요'}**."
 				)
 				await i.response.send_message(embed=embed, ephemeral=True)
 				return
