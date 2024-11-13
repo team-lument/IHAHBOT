@@ -5,6 +5,8 @@ from module.database import *
 import urllib.request
 import plotly.express as px
 from pandas import DataFrame
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 logger = logging.getLogger("ihahbot.main")
 
@@ -315,14 +317,27 @@ rankTierColors = {
 }
 
 def generateMMRHistoryImage(userId: int, data: dict, tier: str):
-	keys = list(data); keys.reverse(); df = []; tierColors = []; tierColors = []
-	for x in range(len(data)):
-		if x < 5:
-			df.append({ "date": "/".join([keys[x][i:i+2] for i in range(0, len(keys[x]), 2)])[3:], "rp": data[keys[x]]['end']})
-			tier = getTier(data[keys[x]]['end'])
+	keys = list(data); day = datetime.today() + relativedelta(days=-15); df = []; tierColors = []; tierColors = []; opacity = []; dataIndex = None
+	while dataIndex == None:
+		if day.strftime("%y%m%d") in keys: dataIndex = day.strftime("%y%m%d")
+		day += relativedelta(days=-1)
+	day = datetime.today() + relativedelta(days=-16)
+	for _ in range(17):
+		if day.strftime("%y%m%d") in keys: dataIndex = day.strftime("%y%m%d")
+		if (
+			day.strftime("%y%m%d") != datetime.today().strftime("%y%m%d")
+	  	) and not (
+			(day + relativedelta(days=1)).strftime("%y%m%d") in keys
+		):
+			opacity.append(0)
+			tierColors.append("rgba(0, 0, 0, 0)")
+		else:
+			opacity.append(1)
 			tierColors.append(rankTierColors[tier])
-	df.reverse(); tierColors.reverse()
-	fig = px.line(DataFrame.from_dict(df), x="date", y="rp", text="rp")
+		df.append({ "date": day.strftime("%m/%d"), "rp": data[dataIndex]['end']})
+		day += relativedelta(days=1)
+	frame = DataFrame.from_dict(df)
+	fig = px.line(frame, x="date", y="rp", text="rp")
 	fig.update_traces(
 		textposition="top center",
 		textfont=dict(
@@ -337,11 +352,12 @@ def generateMMRHistoryImage(userId: int, data: dict, tier: str):
 			colorscale='Viridis',
 			cmin=0,
 			cmax=50,
-			size=15
+			size=15,
+			opacity=opacity
 		)
 	)
 
-	fig.update_xaxes(title=None)
+	fig.update_xaxes(title=None, dtick=2)
 	fig.update_yaxes(title=None, dtick=100)
 	fig.update_layout(
 		margin=dict(
