@@ -315,14 +315,13 @@ rankTierColors = {
 }
 
 def generateMMRHistoryImage(userId: int, data: dict, tier: str):
-	keys = list(data); df = []; tierColors = []; tierColors = []
+	keys = list(data); keys.reverse(); df = []; tierColors = []; tierColors = []
 	for x in range(len(data)):
 		if x < 5:
-			rev = len(data)-x-1
-			df.append({ "date": "/".join([keys[rev][i:i+2] for i in range(0, len(keys[rev]), 2)])[3:], "rp": data[keys[rev]]['end']})
-			tier = getTier(data[keys[rev]]['end'])
+			df.append({ "date": "/".join([keys[x][i:i+2] for i in range(0, len(keys[x]), 2)])[3:], "rp": data[keys[x]]['end']})
+			tier = getTier(data[keys[x]]['end'])
 			tierColors.append(rankTierColors[tier])
-			df.reverse(); tierColors.reverse()
+	df.reverse(); tierColors.reverse()
 	fig = px.line(DataFrame.from_dict(df), x="date", y="rp", text="rp")
 	fig.update_traces(
 		textposition="top center",

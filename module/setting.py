@@ -6,9 +6,20 @@ def getMemberSetting(userId: int, guildId: int, key: str="locale"):
 	c.execute(f"SELECT {key} FROM guildedUser WHERE userId={userId} AND guildId={guildId}")
 	n = c.fetchone()
 	if n != None:
+		if n[0] == 1 or n[0] == 0:
+			if key == "hideNick" or key == "hideGameId":
+				return True if n[0] == 1 else False
 		return n[0]
 	else:
-		return None
+		if key == "locale":
+			setMemberSetting(userId, guildId, "locale", "ko")
+			return "ko"
+		if key == "hideNick":
+			setMemberSetting(userId, guildId, "hideNick", "false")
+			return False
+		if key == "hideGameId":
+			setMemberSetting(userId, guildId, "hideGameId", "false")
+			return False
 
 def setMemberSetting(userId: int, guildId: int, key: str, value: str):
 	conn = sqlite3.connect("database/serviceData.db")

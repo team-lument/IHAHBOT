@@ -109,12 +109,12 @@ async def searchCharacterName(name: str, locale: str="ko"):
 	c.execute(f'SELECT id,{locale} FROM character WHERE {locale} LIKE "%{name}%"')
 	return c.fetchall()
 
-async def getCharacterName(id: int, locale: str="ko"):
+async def getCharacterName(id: int=999, locale: str="ko"):
 	conn = sqlite3.connect("ERData/Character.db", isolation_level=None)
 	c = conn.cursor()
-	c.execute(f'SELECT {locale} FROM character WHERE id={id}')
+	c.execute(f'SELECT {locale} FROM character WHERE id=?', (id,))
 	n = c.fetchone()
-	if n == None or n[0] == None:
+	if n is None or n[0] is None:
 		return f"character.{id}"
 	return n[0]
 
