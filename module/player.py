@@ -95,3 +95,9 @@ async def getUserStatistics(userId: int, season: int=None):
 			for x in r['result']:
 				if x['seasonId'] == season: result['seasonQueueData'] = x
 		return result
+
+async def getUserMMRHistory(userId: int, queue: int=3):
+	async with aiohttp.ClientSession(headers=AYAGG_HEADER) as session:
+		async with session.get(AYAGG_API_URL + f"/queues/by-player/{userId}/history") as res:
+			r = await res.json()
+			return r['result'][f'{queue}']

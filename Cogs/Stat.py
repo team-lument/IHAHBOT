@@ -2,7 +2,7 @@ import disnake, aiohttp
 from disnake.ext import commands
 from config import AYAGG_API_URL, AYAGG_HEADER
 from module.embed import makeErrorEmbed
-from module.player import getRecord, getRecord_Match, getUserId, getUserStatistics, searchUser
+from module.player import getRecord, getRecord_Match, getUserId, getUserMMRHistory, getUserStatistics, searchUser
 from module.setting import getMemberSetting
 from module.statImage import generateRecordImage, generateStatImage
 from module.games import getRecordOptions
@@ -82,7 +82,7 @@ class Stat(commands.Cog):
 			else:
 				nick = userNames['result'][0]['name']
 				userId = userNames['result'][0]['id']
-		generateStatImage([userId, nick], await getUserStatistics(userId, 27))
+		generateStatImage([userId, nick], await getUserStatistics(userId, 27), await getUserMMRHistory(userId))
 		record = await getRecord(userId)
 		await i.edit_original_message(embed=None, file=disnake.File(fp=f"Match/Stat/{userId}.png", filename=f"Stat-{userId}.png"), view=RecordListView(i.user.id, await getRecordOptions(record['result'], i), userId, record['page']))
 
@@ -103,13 +103,9 @@ class userSearch(disnake.ui.Select):
 		if self._userId == i.user.id:
 			nick = self.values[0]
 			userId = await getUserId(nick)
-			embed = disnake.Embed(
-				title=f"{nick}님의 전적",
-				description="원하는 기록을 선택하고 전적을 확인해보세요!"
-			)
-			embed.set_footer(text="Data from aya.gg")
+			generateStatImage([userId, nick], await getUserStatistics(userId, 27), await getUserMMRHistory(userId))
 			record = await getRecord(userId)
-			await i.response.edit_message(embed=embed, view=RecordListView(i.user.id, await getRecordOptions(record['result'], i), userId, record['page']))
+			await i.response.edit_message(embed=None, file=disnake.File(fp=f"Match/Stat/{userId}.png", filename=f"Stat-{userId}.png"), view=RecordListView(i.user.id, await getRecordOptions(record['result'], i), userId, record['page']))
 		else:
 			await i.response.send_message(embed=makeErrorEmbed("선택권은 메시지 주인에게만 있어요!"), ephemeral=True)
 

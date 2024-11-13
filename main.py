@@ -1,4 +1,4 @@
-import disnake, os, asyncio, platform, logging, coloredlogs
+import disnake, os, platform, logging, coloredlogs
 from disnake.ext import commands
 from config import *
 
@@ -104,19 +104,6 @@ async def load_slashCommand(i: disnake.CommandInteraction, module: str):
 		await i.response.send_message(f"Module loaded: {module}")
 	except Exception as e:
 		await i.response.send_message(f"Module load failed: {module}\n```{e}```")
-
-async def change_presence(shard_id):
-	if not "-working" in version:
-		shard = bot.get_shard(shard_id)
-		while not shard.is_closed():
-			await bot.change_presence(status = disnake.Status.online, activity = disnake.Game(f"{version.split('-')[0]} / Shard #{shard_id}"))
-			await asyncio.sleep(15)
-			await bot.change_presence(status = disnake.Status.online, activity = disnake.Activity(type=disnake.ActivityType.listening, name="/help"))
-			await asyncio.sleep(15)
-			await bot.change_presence(status = disnake.Status.online, activity = disnake.Game(f"{len(bot.guilds)} Guilds"))
-			await asyncio.sleep(15)
-	else:
-		await bot.change_presence(status = disnake.Status.online, activity = disnake.Game(f"IHAHBOT is working!"))
 
 if f"{platform.system()}" != "Windows": bot.run(TOKEN_PRODUCTION)
 else: bot.run(TOKEN_TESTBUILD)

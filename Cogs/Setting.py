@@ -98,7 +98,7 @@ class Setting(commands.Cog):
 				await i.response.send_message(embed=embed, ephemeral=True)
 				return
 			else:
-				await i.response.send_message(embed=makeErrorEmbed("잘못된 값이에요."), ephemeral=True)
+				await i.response.send_message(embed=makeErrorEmbed("잘못된 값이에요. `true` 또는 `false` 로만 입력해야해요."), ephemeral=True)
 				return
 		elif key == "hideGameId":
 			if value == "true" or value == "false":
@@ -110,18 +110,18 @@ class Setting(commands.Cog):
 				await i.response.send_message(embed=embed, ephemeral=True)
 				return
 			else:
-				await i.response.send_message(embed=makeErrorEmbed("잘못된 값이에요."), ephemeral=True)
+				await i.response.send_message(embed=makeErrorEmbed("잘못된 값이에요. `true` 또는 `false` 로만 입력해야해요."), ephemeral=True)
 				return
 		elif key == "gameNickname":
-			# await i.response.send_message(embed=makeErrorEmbed("아직 준비 중인 기능이에요."), ephemeral=True)
-			# return
-			userId = await getUserId(value)
-			level = await getUserLevel(userId)
-			embed = disnake.Embed(
-				title="👤 계정 확인",
-				description=f"`{i.guild.name}` 서버의 `내 이터널 리턴 닉네임` 설정을 **{value}** (Lv.{level}) 로 변경해요.\n정말 내 이터널 리턴 닉네임이 맞나요? **__다를 경우 이하봇 이용이 중지될 수 있어요.__**"
-			)
-			await i.response.send_message(embed=embed, ephemeral=True)
+			await i.response.send_message(embed=makeErrorEmbed("아직 준비 중인 기능이에요."), ephemeral=True)
+			return
+			# userId = await getUserId(value)
+			# level = await getUserLevel(userId)
+			# embed = disnake.Embed(
+			# 	title="👤 계정 확인",
+			# 	description=f"`{i.guild.name}` 서버의 `내 이터널 리턴 닉네임` 설정을 **{value}** (Lv.{level}) 로 변경해요.\n정말 내 이터널 리턴 닉네임이 맞나요? **__다를 경우 이하봇 이용이 중지될 수 있어요.__**"
+			# )
+			# await i.response.send_message(embed=embed, ephemeral=True)
 
 def setup(bot: commands.Bot):
 	bot.add_cog(Setting(bot))
