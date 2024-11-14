@@ -10,7 +10,8 @@ def helpEmbed():
 	embed.add_field(name="/동접", value=f"현재 이터널 리턴 동접을 보여줘요.", inline=False)
 	embed.add_field(name="🛠️ /소식", value=f"이터널 리턴 공식 홈페이지의 공지를 보여줘요.", inline=False)
 	embed.add_field(name="/시즌", value="다음 시즌까지 남은 시간을 알려줘요.", inline=False)
-	embed.add_field(name="🛠️ /이터컷 (시즌명) (솔로/듀오/스쿼드)", value="해당 시즌과 해당 모드의 이터니티 컷을 확인해요.\n시즌을 입력하지 않으면 현재 시즌, 모드를 입력하지 않으면 솔로 또는 스쿼드를 보여줘요.", inline=False)
+	embed.add_field(name="/랭킹 RP", value="프리 시즌이 아닌 현재 시즌의 RP 랭킹을 불러와요.\n이터니티와 데미갓의 최저 RP도 함께 보여줘요.\n선택하면 해당 유저의 전적을 확인해요.", inline=False)
+	embed.add_field(name="/랭킹 장인력 [캐릭터]", value="프리 시즌이 아닌 현재 시즌의 장인력 랭킹을 불러와요.\n선택하면 해당 유저의 전적을 확인해요.", inline=False)
 	embed.set_footer(text="다음 페이지에 이어져요!")
 	return embed
 

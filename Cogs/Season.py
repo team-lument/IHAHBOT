@@ -1,6 +1,7 @@
 import disnake, aiohttp, json, datetime, time
 from config import API_URL, API_HEADER
 from disnake.ext import commands
+from module.variables import getSeason
 
 class Season(commands.Cog):
 	def __init__(self, bot):
@@ -28,11 +29,12 @@ class Season(commands.Cog):
 		async with aiohttp.ClientSession(headers=API_HEADER) as session:
 			async with session.get(API_URL[:-3] + f"/v2/data/Season") as req:
 				r = json.loads(await req.text())
-		nowseason = len(r['data'])-1
-		endtime = datetime.datetime.strptime(str(r['data'][nowseason]['seasonEnd']), "%Y-%m-%d %H:%M:%S")
+		nowSeason = 0
+		for x in r['data']: nowSeason = x['seasonID'] if x['isCurrent'] == True else nowSeason
+		endtime = datetime.datetime.strptime(str(r['data'][nowSeason]['seasonEnd']), "%Y-%m-%d %H:%M:%S")
 		embed = disnake.Embed(
 			title="남은 시즌 기간",
-			description=f"{str(r['data'][nowseason]['seasonName']).replace('Season', '시즌 ').replace('Pre-', '프리')}"
+			description=f"{getSeason(nowSeason)}"
 		)
 		embed.add_field(name="종료 일시", value=f"<t:{int(time.mktime(endtime.timetuple()))}:F>\n<t:{int(time.mktime(endtime.timetuple()))}:R>")
 		embed.set_footer(text="표기 종료 일시는 현재 본인의 시간대로 표시됩니다.")
