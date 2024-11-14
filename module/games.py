@@ -26,13 +26,13 @@ async def getRecordOptions(r: dict, i: disnake.CommandInteraction, thisMatch: bo
 		else:
 			if rank == "승리":
 				emoji = disnake.PartialEmoji(
-					name=f"rankwin",
-					id=getCustomEmojiId('rankwin')
+					name=f"rank_win",
+					id=getCustomEmojiId('rank_win')
 				)
 			else:
 				emoji = disnake.PartialEmoji(
-					name=f"ranklose",
-					id=getCustomEmojiId('ranklose')
+					name=f"rank_lose",
+					id=getCustomEmojiId('rank_lose')
 				)
 		if x['activityFlags']['escapeState'] == 3:
 			rank = "탈출"

@@ -208,6 +208,8 @@ def generateRecordImage(x: dict, disable: dict = {"nickname": 0, "gameId": 0}):
 			im = Image.open(f"image/Trait/{trait['firstCore']}.png").resize((128, 128))
 			image.paste(im, (892, 842), im)
 		else:
+			im = Image.open(f"image/Trait/none.png").resize((128, 128))
+			image.paste(im, (892, 842), im)
 			logger.error(f"statImage.makeImage | firstCore {trait['firstCore']} Image not Found")
 		coord = [(1038, 842), (1184, 842)]
 		for tmp in range(len(trait['firstSub'])):
@@ -268,10 +270,10 @@ def generateRecordImage(x: dict, disable: dict = {"nickname": 0, "gameId": 0}):
 			try:
 				characterEquipment = Image.open(f"image/Items/{equip[i]}.png").convert("RGBA")
 			except Exception as e:
-				backup = getItemBackup(int(equip[i]), _matchVersion)
+				backup = getItemBackup(int(equip[i]))
 				if backup:
 					if not os.path.isfile(f"image/Items/{backup}.png"):
-						saveItemImage(int(backup))
+						saveItemImage(int(backup), _matchVersion)
 					characterEquipment = Image.open(f"image/Items/{backup}.png").convert("RGBA")
 				else:
 					saveItemImage(int(equip[i]), _matchVersion)
