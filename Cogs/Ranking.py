@@ -196,7 +196,7 @@ class Ranking(commands.Cog):
 		ranking = await getRanking_Artisan(characterId=character)
 		rankList = makeRanking(ranking['result'], artisan=True)
 		embed = disnake.Embed(
-			title=f"{await getCharacterName(character)} 장인력 랭킹"
+			title=f"{getCharacterName(character)} 장인력 랭킹"
 		)
 		await i.edit_original_message(embed=embed, view=RankingView(i.user.id, 0, (ranking['page'][1]-1)*2, rankList, True))
 

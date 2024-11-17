@@ -13,7 +13,7 @@ async def getRecordOptions(r: dict, i: disnake.CommandInteraction, thisMatch: bo
 		mtm = int(x['queueType'])
 		seasonNum = x['seasonId']
 		season = f"{getSeason(seasonNum)} {getTeamType(mtm)}" if mtm != 4 else "코발트 프로토콜"
-		character = await getCharacterName(x['characterId'], getMemberSetting(i.user.id, i.guild.id, "locale"))
+		character = getCharacterName(x['characterId'], getMemberSetting(i.user.id, i.guild.id, "locale"))
 		assistant = x['assist'] if mtm != 1 else "-"
 		rank = int(x['rank'])
 		if mtm == 4: rank = "승리" if rank == 1 else "패배"
@@ -78,7 +78,7 @@ async def getMatchData(userNum: int, gameId: int):
 	if data: return data
 	else:
 		async with aiohttp.ClientSession(headers=HEADER) as session:
-			async with session.get(API_URL + f"/user/games/{userNum}?next={gameId + 1}") as res:
+			async with session.get(API_URL + f"/v1/user/games/{userNum}?next={gameId + 1}") as res:
 				r = await res.json()
 				if r['code'] == 200:
 					return r['userGames'][0]
@@ -87,7 +87,7 @@ async def getMatchList(userNum: int, limit: int = 10):
 	for x in db.match.find({"userNum":userNum}).sort("gameId", pymongo.DESCENDING).skip(1).limit(limit):
 		print(x)
 		# async with aiohttp.ClientSession(headers=HEADER) as session:
-		# 	async with session.get(API_URL + f"/user/games/{userNum}?next=0") as res:
+		# 	async with session.get(API_URL + f"/v1/user/games/{userNum}?next=0") as res:
 		# 		data = await res.json()
 		# 		if data['code'] == 200:
 		# 			return data['data']

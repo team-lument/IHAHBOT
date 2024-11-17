@@ -48,7 +48,7 @@ class Skin(disnake.ui.Select):
 			embed.add_field(name="주요 획득 경로", value=f"{skinTypeOptions[skinType].replace('{0}', f'{var0}').replace('{1}', f'{var1}').replace('{2}', f'{var2}')}\n-# 획득 경로 및 가격은 차이가 있을 수 있어요.\n-# 일부 스킨은 제작소에서도 획득할 수 있어요.", inline=False)
 		else:
 			embed.add_field(name="주요 획득 경로", value="없음\n-# 일부 스킨은 제작소에서도 획득할 수 있어요.")
-		embed.set_image(url=f"https://aya.gg/images/characters/CharFull_{(await getCharacterName(characterId, 'en')).replace(' ', '').replace('&', '')}_S{str(skinId)[4:7]}.webp")
+		embed.set_image(url=f"https://aya.gg/images/characters/CharFull_{(getCharacterName(characterId, 'en')).replace(' ', '').replace('&', '')}_S{str(skinId)[4:7]}.webp")
 		await i.edit_original_message(embed=embed, view=SkinView(self._skinList, characterId))
 
 class ChangeView_Skin(disnake.ui.Button):
@@ -59,7 +59,7 @@ class ChangeView_Skin(disnake.ui.Button):
 
 	async def callback(self, i: disnake.MessageInteraction):
 		embed = disnake.Embed(
-			title=await getCharacterName(self._character),
+			title=getCharacterName(self._character),
 			description="스킨을 선택해주세요."
 		)
 		await i.response.edit_message(embed=embed, view=SkinView(self._skinList, self._character), attachments=None)
@@ -70,12 +70,14 @@ class ChangeView_Story(disnake.ui.Button):
 		super().__init__(style=disnake.ButtonStyle.primary, label="스토리 보기")
 
 	async def callback(self, i: disnake.MessageInteraction):
-		characterName = await getCharacterName(self._characterId, "en")
+		characterName = getCharacterName(self._characterId, "en")
+		characterKorean = getCharacterName(self._characterId, "ko")
+		characterCode = getCharacterName(self._characterId, "code")
 		fullName = await getCharacterFullName(self._characterId)
 		story = await getCharacterStory(self._characterId)
 		storyFull = story[1].replace('\\n', '\n')
 		embed = disnake.Embed(
-			title=fullName,
+			title=f"{characterCode} {characterKorean} / {fullName}",
 			description=f"**\"{story[0]}\"**\n\n{storyFull}"
 		)
 		embed.set_image(file=disnake.File(fp=f"image/CharacterInfo/{characterName}.png", filename=f"IHBv4_ER_{characterName}_Background.png"))
@@ -87,18 +89,18 @@ class ChangeView_Character(disnake.ui.Button):
 		super().__init__(style=disnake.ButtonStyle.primary, label="실험체 보기")
 
 	async def callback(self, i: disnake.MessageInteraction):
-		characterName = await getCharacterName(self._characterId, "en")
+		characterName = getCharacterName(self._characterId, "en")
 		[np, acoin] = await getCharacterPrice(self._characterId)
 		story = await getCharacterStory(self._characterId)
 		embed = disnake.Embed(
-			title=await getCharacterName(self._characterId),
+			title=getCharacterName(self._characterId),
 			description=f"**\"{story[0]}\"**"
 		)
 		embed.add_field(name="상점 가격", value=f"<:NP:1264438465546682380> `{'{:,}'.format(np)}`\n<:ACoin:1264438301662646284> `{'{:,}'.format(acoin)}`\n-# 상점 가격은 차이가 있을 수 있어요.\n-# 일부 아이템은 제작소에서도 획득할 수 있어요.", inline=False)
 		if os.path.isfile(f"image/skinFull/{characterName}_0.png"):
 			embed.set_image(file=disnake.File(fp=f"image/skinFull/{characterName}_0.png", filename=f"IHBv4_ERData_{characterName}_Skin_0_Full.png"))
 		else:
-			embed.set_image(url=f"https://aya.gg/images/characters/SkinFull_{characterName}_S000.webp")
+			embed.set_image(url=f"https://aya.gg/images/characters/CharFull_{characterName}_S000.webp")
 		await i.response.edit_message(embed=embed, view=CharacterView(await makeSkinList(self._characterId), self._characterId))
 
 class StoryView(disnake.ui.View):
@@ -177,20 +179,20 @@ class Database(commands.Cog):
 		self, i: disnake.CommandInteraction, name: int
 	):
 		name = int(name)
-		characterName = await getCharacterName(name, "en")
+		characterName = getCharacterName(name, "en")
 		if not "character" in characterName:
 			await i.response.defer()
 			[np, acoin] = await getCharacterPrice(name)
 			story = await getCharacterStory(name)
 			embed = disnake.Embed(
-				title=await getCharacterName(name),
+				title=getCharacterName(name),
 				description=f"**\"{story[0]}\"**"
 			)
 			embed.add_field(name="상점 가격", value=f"<:NP:1264438465546682380> `{'{:,}'.format(np)}`\n<:ACoin:1264438301662646284> `{'{:,}'.format(acoin)}`\n-# 상점 가격은 차이가 있을 수 있어요.\n-# 일부 아이템은 제작소에서도 획득할 수 있어요.", inline=False)
 			if os.path.isfile(f"image/skinFull/{characterName}_0.png"):
 				embed.set_image(file=disnake.File(fp=f"image/skinFull/{characterName}_0.png", filename=f"IHBv4_ERData_{characterName}_Skin_0_Full.png"))
 			else:
-				embed.set_image(url=f"https://aya.gg/images/characters/SkinFull_{characterName}_S000.webp")
+				embed.set_image(url=f"https://aya.gg/images/characters/CharFull_{characterName}_S000.webp")
 			await i.edit_original_message(embed=embed, view=CharacterView(await makeSkinList(name), name))
 		else:
 			await i.response.send_message(embed=makeErrorEmbed("그런 실험체는 없어요."), ephemeral=True)

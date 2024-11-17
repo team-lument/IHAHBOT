@@ -27,7 +27,7 @@ class Season(commands.Cog):
 		self, i: disnake.CommandInteraction
 	):
 		async with aiohttp.ClientSession(headers=API_HEADER) as session:
-			async with session.get(API_URL[:-3] + f"/v2/data/Season") as req:
+			async with session.get(API_URL + f"/v2/data/Season") as req:
 				r = json.loads(await req.text())
 		nowSeason = 0
 		for x in r['data']: nowSeason = x['seasonID'] if x['isCurrent'] == True else nowSeason

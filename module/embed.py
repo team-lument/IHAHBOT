@@ -1,4 +1,7 @@
 import disnake
+
+from module.database import WeaponEmoji, getArea, getCharacterName, getCharacterWeapon
+from module.route import generateSkillTree
 def makeErrorEmbed(desc:str="내부 오류가 발생했어요."): return disnake.Embed(title=":warning: 오류!", description=desc, color=0xFF0000)
 
 def helpEmbed():
@@ -35,4 +38,17 @@ def SpecialThanks():
 	embed.add_field(name="Supporter", value=">>> 지빵 `@jippang`\n응애 `@whygamja`\n크로니아 `@croniakr`", inline=False)
 	embed.add_field(name="Development Help", value="- KOZ39 `@koz39`\n> Reports various errors.\n> Help for making `/ccu` command", inline=False)
 	embed.add_field(name="Service Data", value="> [Aya.gg](https://aya.gg)", inline=False)
+	return embed
+
+def routeEmbed(x: dict):
+	embed = disnake.Embed(
+		title=x['title']
+	)
+	tree = generateSkillTree(x['preferences']['skills'])
+	[character, weapon] = getCharacterWeapon(x['characterWeaponId'])
+	embed.add_field(name="실험체", value=f"{WeaponEmoji(weapon)} {getCharacterName(character)}")
+	embed.add_field(name="제작자", value=x['playerName'])
+	embed.add_field(name="좋아요", value=x['likes'])
+	embed.add_field(name="스킬트리", value=f"**{' → '.join(tree[1])}**\n{' → '.join(tree[0])}", inline=False)
+	embed.add_field(name="지역", value=' → '.join([getArea(a) for a in x['preferences']['areas']]))
 	return embed

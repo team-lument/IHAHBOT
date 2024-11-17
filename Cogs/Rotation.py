@@ -31,13 +31,13 @@ class Rotation(commands.Cog):
 			title=f"일주일 무료 실험체"
 		)
 		async with aiohttp.ClientSession(headers=API_HEADER) as session:
-			async with session.get(API_URL + f'/freeCharacters/2') as req:
+			async with session.get(API_URL + f'/v1/freeCharacters/2') as req:
 				r = json.loads(await req.text()); characterName = []
-				for x in r['freeCharacters']: characterName.append(await getCharacterName(x, getMemberSetting(i.user.id, i.guild.id, "locale")))
+				for x in r['freeCharacters']: characterName.append(getCharacterName(x, getMemberSetting(i.user.id, i.guild.id, "locale")))
 				embed.add_field(name="루미아 섬", value=f"{', '.join(characterName)}", inline=False)
-			async with session.get(API_URL + f'/freeCharacters/6') as req:
+			async with session.get(API_URL + f'/v1/freeCharacters/6') as req:
 				r = json.loads(await req.text()); characterName = []
-				for x in r['freeCharacters']: characterName.append(await getCharacterName(x, getMemberSetting(i.user.id, i.guild.id, "locale")))
+				for x in r['freeCharacters']: characterName.append(getCharacterName(x, getMemberSetting(i.user.id, i.guild.id, "locale")))
 				embed.add_field(name="코발트 프로토콜", value=f"{', '.join(characterName)}", inline=False)
 		await i.response.send_message(embed=embed)
 

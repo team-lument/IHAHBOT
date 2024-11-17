@@ -42,9 +42,9 @@ async def getUserId(nick: str):
 	# 	n = c.fetchone()
 	if n == None:
 		async with aiohttp.ClientSession(headers=API_HEADER) as session:
-			async with session.get(API_URL + f"/user/nickname?query={nick}") as res:
+			async with session.get(API_URL + f"/v1/user/nickname?query={nick}") as res:
 				r = await res.json()
-				if r['code'] == 404:
+				if res.status == 404:
 					return None
 				c.execute(f"SELECT * FROM player WHERE userId={r['user']['userNum']}")
 				if c.fetchone():
@@ -74,7 +74,7 @@ async def getUserLevel(userId: int):
 		async with aiohttp.ClientSession(headers=AYAGG_HEADER) as session:
 			async with session.get(AYAGG_API_URL + f"/player/by-name/{nick}") as res:
 				r = await res.json()
-				if r['code'] == 404: return None
+				if res.status == 404: return None
 				data = r['result'][0]['level']
 				c.execute(f"UPDATE player SET accountLevel={data} WHERE userId={userId}")
 				conn.commit()
@@ -100,4 +100,7 @@ async def getUserMMRHistory(userId: int, queue: int=3):
 	async with aiohttp.ClientSession(headers=AYAGG_HEADER) as session:
 		async with session.get(AYAGG_API_URL + f"/queues/by-player/{userId}/history") as res:
 			r = await res.json()
-			return r['result'][f'{queue}']
+			try:
+				return r['result'][f'{queue}']
+			except:
+				return None

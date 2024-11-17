@@ -1,6 +1,7 @@
 import disnake, os, platform, logging, coloredlogs
 from disnake.ext import commands
 from config import *
+from module.log import logDB
 
 bot = commands.AutoShardedBot(shard_count=1, command_prefix=commands.when_mentioned, test_guilds=[742188157424107679,812664224512868382] if f"{platform.system()}" == "Windows" else None)
 bot.remove_command('help')
@@ -33,17 +34,9 @@ async def on_shard_disconnect(shard_id):
 async def on_slash_command(i: disnake.CommandInteraction):
 	options = ""
 	for x in i.data.options:
-		options = f"{options} [{x.name}:{x.value}]"
-	#await logDB(f"{i.user.name}", i.user.id, i.guild.id, i.channel.id, f"/{i.data.name} {options[1:]}")
+		options = f"{options} [{x.name}:{x.value}]" if x.value != None else f"{options} {x.name}"
+	await logDB(f"{i.user.name}", i.user.id, i.guild.id, i.channel.id, f"/{i.data.name} {options[1:]}")
 	logger.debug(f"useSlashCommand | @{i.user.name} ({i.user.id}) | /{i.data.name} {options[1:]} | {i.guild.id} # {i.channel.id}")
-
-@bot.slash_command(
-	name="logout",
-	description="Bot Logout",
-	guild_ids=[742188157424107679]
-)
-async def reload_slashCommand(i: disnake.CommandInteraction):
-	await bot.close()
 
 @bot.slash_command(
 	name="reload",
