@@ -206,7 +206,7 @@ def makeRanking(r: dict, back: bool = False, artisan: bool = False):
 		if (back and tmp >= 25 and len(rankList) < 25) or (not back and len(rankList) < 25):
 			x = r[tmp]; rank = x['index']+1
 			if tmp > 0 and x['value'] == r[tmp-1]['value']: rank -= 1
-			rankList.append(disnake.SelectOption(label=f"#{rank} {x['playerName']}", description=f"{' '.join(getTierName(x['value'], x['queueTable']['3']['isDemigod'], x['queueTable']['3']['isEternity']))} ({x['value']}LP)" if not artisan else f"{x['value']}점", value=x['playerId']))
+			rankList.append(disnake.SelectOption(label=f"#{rank} {x['playerName']}", description=f"{' '.join(getTierName(x['value'], x['queueTable']['3']['isDemigod'], x['queueTable']['3']['isEternity'])[0:1])} ({x['value']}LP)" if not artisan else f"{x['value']}점", value=x['playerId']))
 	return rankList
 
 def setup(bot: commands.Bot):

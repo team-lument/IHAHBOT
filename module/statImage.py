@@ -312,7 +312,7 @@ rankTierColors = {
 	"gold": 		"rgb(224, 184, 102)",
 	"platinum": 	"rgb(122, 225, 175)",
 	"diamond": 		"rgb(208, 196, 226)",
-	"metheorite": 	"rgb(105, 159, 229)",
+	"meteorite": 	"rgb(105, 159, 229)",
 	"mithril": 		"rgb(130, 208, 225)",
 	"demigod": 		"rgb(255, 255, 222)",
 	"eternity": 	"rgb(160, 31, 74)"
