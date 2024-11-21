@@ -35,7 +35,7 @@ def WeaponTxtKo(id):
 
 def WeaponName(id):
 	conn = sqlite3.connect("ERData/Item.db"); c = conn.cursor()
-	c.execute('SELECT name FROM Category WHERE weaponIndex=?', (id,))
+	c.execute('SELECT sub FROM Category WHERE weaponIndex=?', (id,))
 	a = c.fetchone()
 	if a[0] != 'None':
 		return f"{a[0]}"
