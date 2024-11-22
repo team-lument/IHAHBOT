@@ -24,10 +24,13 @@ async def on_ready():
 	await bot.change_presence(status = disnake.Status.online, activity = disnake.CustomActivity(name=f"No.1 이터널 리턴 전적봇 | /전적", state="No.1 이터널 리턴 전적봇 | /전적", emoji=disnake.PartialEmoji(name="rank1", id=1284775535855140916)))
 
 async def update_bot_info():
+	guilds = 0
 	await bot.wait_until_ready()
 	while not bot.is_closed():
-		await KoreanbotsRequester(KOREANBOTS_TOKEN).post_update_bot_info(bot.user.id, servers=len(bot.guilds))
-		logger.info(f"koreanbots | Guilds: {len(bot.guilds)}")
+		if len(bot.guilds) != guilds:
+			guilds = len(bot.guilds)
+			await KoreanbotsRequester(KOREANBOTS_TOKEN).post_update_bot_info(bot.user.id, servers=len(bot.guilds))
+			logger.info(f"koreanbots | Guilds: {len(bot.guilds)}")
 		await asyncio.sleep(60)
 
 bot.loop.create_task(update_bot_info())

@@ -41,7 +41,7 @@ class Info(commands.Cog):
 			title="이하봇 정보",
 			color=0xabcdef
 		)
-		infoEmbed.add_field(name="버전", value="`BETA` v4.0.4 `day-241123` `build-5707946`")
+		infoEmbed.add_field(name="버전", value="`BETA` v4.0.4 `241123` `build-13cdf86`")
 		infoEmbed.add_field(name="서버 수", value=f"{len(self.bot.guilds)}개")
 		infoEmbed.add_field(name="개발자", value="라이니 `@rai_ny._.`\n741973166364164099")
 		erarStatus = await getERARStatus()
