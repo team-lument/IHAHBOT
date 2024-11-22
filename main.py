@@ -1,9 +1,10 @@
-import disnake, os, platform, logging, coloredlogs
+import disnake, os, platform, logging, coloredlogs, asyncio
 from disnake.ext import commands
+from koreanbots import KoreanbotsRequester
 from config import *
 from module.log import logDB
 
-bot = commands.AutoShardedBot(shard_count=1, command_prefix=commands.when_mentioned, test_guilds=[742188157424107679,812664224512868382] if f"{platform.system()}" == "Windows" else None)
+bot = commands.Bot(command_prefix=commands.when_mentioned, test_guilds=[742188157424107679,812664224512868382] if f"{platform.system()}" == "Windows" else None)
 bot.remove_command('help')
 
 logger = logging.getLogger("ihahbot.main")
@@ -22,13 +23,14 @@ async def on_ready():
 	logger.info(f"Woke Up! {bot.user.name} ({bot.user.id})")
 	await bot.change_presence(status = disnake.Status.online, activity = disnake.CustomActivity(name=f"No.1 이터널 리턴 전적봇 | /전적", state="No.1 이터널 리턴 전적봇 | /전적", emoji=disnake.PartialEmoji(name="rank1", id=1284775535855140916)))
 
-@bot.event
-async def on_shard_connect(shard_id):
-	logger.info(f"Shard #{shard_id} is ready!")
+async def update_bot_info():
+	await bot.wait_until_ready()
+	while not bot.is_closed():
+		await KoreanbotsRequester(KOREANBOTS_TOKEN).post_update_bot_info(bot.user.id, servers=len(bot.guilds))
+		logger.info(f"koreanbots | Guilds: {len(bot.guilds)}")
+		await asyncio.sleep(60)
 
-@bot.event
-async def on_shard_disconnect(shard_id):
-	logger.error(f"Shard #{shard_id} is stopped.")
+bot.loop.create_task(update_bot_info())
 
 @bot.event
 async def on_slash_command(i: disnake.CommandInteraction):
