@@ -1,17 +1,24 @@
 import time, disnake, requests
 from disnake.ext import commands
-from config import AYAGG_API_URL, AYAGG_HEADER
+from config import API_HEADER, API_URL, AYAGG_API_URL, AYAGG_HEADER
 
-async def getERARStatus():
+async def getStatus():
+	result = {}
 	try:
-		start = time.time()*1000
+		erar_start = time.time()*1000
 		req = requests.get(AYAGG_API_URL + '/status', headers=AYAGG_HEADER)
-		end = time.time()*1000
-		if req.status_code != 200: return [f"❌ 이용 불가 `({req.status_code})`", "⚠️ 확인 불가", 0]
-		r = req.json()
-		return ["정상" if r['erar'] == "FINE" else "⚠️ 점검 중!", "정상" if r['errr'] == "FINE" else "⚠️ 점검 중!", end-start]
+		erar_end = time.time()*1000; erar = req.json()
+		result["erar"] = ["정상" if erar['erar'] == "FINE" else "⚠️ 점검 중!" if req.status_code != 200 else f"❌ 이용 불가 `({erar.status_code})`", erar_end-erar_start]
 	except:
-		return ["❌ 이용 불가 `(알 수 없음)`", "⚠️ 확인 불가", 0]
+		result["erar"] = ["❌ 이용 불가 `(알 수 없음)`", 0]
+	try:
+		errr_start = time.time()*1000
+		req = requests.get(API_URL + '/v2/data/Season', headers=API_HEADER)
+		errr_end = time.time()*1000; errr = req.json()
+		result["errr"] = ["정상" if erar['errr'] == "FINE" else "⚠️ 점검 중!" if errr['code'] == 200 else f"❌ 이용 불가 `({errr['code']})`", errr_end-errr_start]
+	except:
+		result["errr"] = ["❌ 이용 불가 `(알 수 없음)`", 0]
+	return result
 
 class Info(commands.Cog):
 	def __init__(self, bot: commands.Bot):
@@ -41,17 +48,17 @@ class Info(commands.Cog):
 			title="이하봇 정보",
 			color=0xabcdef
 		)
-		infoEmbed.add_field(name="버전", value="`BETA` v4.0.4 `241123` `build-13cdf86`")
+		infoEmbed.add_field(name="버전", value="`BETA` v4.0.4 `241123` `build-216def0`", inline=False)
 		infoEmbed.add_field(name="서버 수", value=f"{len(self.bot.guilds)}개")
 		infoEmbed.add_field(name="개발자", value="라이니 `@rai_ny._.`\n741973166364164099")
-		erarStatus = await getERARStatus()
+		status = await getStatus(); erar = status["erar"]; errr = status["errr"]
 		pingEmbed = disnake.Embed(
 			title="데이터 서버 상태 및 레이턴시",
 			color=0xabcdef
 		)
 		pingEmbed.add_field(name="Discord", value=f"정상\n`{int(self.bot.latency*1000)}ms`")
-		pingEmbed.add_field(name="AYA.GG", value=f"{erarStatus[0]}\n{f'`{int(erarStatus[2])}ms`' if erarStatus[2] != 0 else ''}")
-		pingEmbed.add_field(name="이터널 리턴", value=erarStatus[1])
+		pingEmbed.add_field(name="AYA.GG", value=f"{erar[0]}\n{f'`{int(erar[1])}ms`' if erar[1] != 0 else ''}")
+		pingEmbed.add_field(name="이터널 리턴", value=f"{errr[0]}\n{f'`{int(errr[1])}ms`' if errr[1] != 0 else ''}")
 		pingEmbed.set_footer(text="지연 시간의 기준점은 이하봇 서버입니다.")
 		await i.edit_original_message(embeds=[infoEmbed, pingEmbed])
 

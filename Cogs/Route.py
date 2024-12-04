@@ -1,5 +1,5 @@
 import disnake
-from module.embed import routeEmbed
+from module.embed import makeErrorEmbed, routeEmbed
 from module.route import getRoute
 from disnake.ext import commands
 
@@ -30,7 +30,8 @@ class Route(commands.Cog):
 	):
 		if route.isdigit():
 			data = await getRoute(id=int(route))
-			await i.response.send_message(embed=routeEmbed(data['result']))
+			if data: await i.response.send_message(embed=routeEmbed(data['result']))
+			else: await i.response.send_message(embed=makeErrorEmbed(f"API 요청에 실패했어요."))
 		else:
 			data = await getRoute(name=route)
 

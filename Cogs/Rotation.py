@@ -1,6 +1,7 @@
 import disnake, aiohttp, json
 from config import API_URL, API_HEADER
 from module.database import getCharacterName
+from module.embed import makeErrorEmbed
 from module.setting import getMemberSetting
 from disnake.ext import commands
 
@@ -33,11 +34,17 @@ class Rotation(commands.Cog):
 		async with aiohttp.ClientSession(headers=API_HEADER) as session:
 			async with session.get(API_URL + f'/v1/freeCharacters/2') as req:
 				r = json.loads(await req.text()); characterName = []
-				for x in r['freeCharacters']: characterName.append(getCharacterName(x, getMemberSetting(i.user.id, i.guild.id, "locale")))
+				if r['code'] != 200:
+					for x in r['freeCharacters']: characterName.append(getCharacterName(x, getMemberSetting(i.user.id, i.guild.id, "locale")))
+				else:
+					characterName = ["❌ API 요청에 실패했어요.\n-# /정보 명령어를 통해 현재 서버 상황을 확인할 수 있어요."]
 				embed.add_field(name="루미아 섬", value=f"{', '.join(characterName)}", inline=False)
 			async with session.get(API_URL + f'/v1/freeCharacters/6') as req:
 				r = json.loads(await req.text()); characterName = []
-				for x in r['freeCharacters']: characterName.append(getCharacterName(x, getMemberSetting(i.user.id, i.guild.id, "locale")))
+				if r['code'] == 200:
+					for x in r['freeCharacters']: characterName.append(getCharacterName(x, getMemberSetting(i.user.id, i.guild.id, "locale")))
+				else:
+					characterName = ["❌ API 요청에 실패했어요.\n-# /정보 명령어를 통해 현재 서버 상황을 확인할 수 있어요."]
 				embed.add_field(name="코발트 프로토콜", value=f"{', '.join(characterName)}", inline=False)
 		await i.response.send_message(embed=embed)
 

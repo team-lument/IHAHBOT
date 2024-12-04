@@ -27,13 +27,11 @@ async def update_bot_info():
 	guilds = 0
 	await bot.wait_until_ready()
 	while not bot.is_closed():
-		if len(bot.guilds) != guilds:
+		if guilds != len(bot.guilds):
 			guilds = len(bot.guilds)
 			await KoreanbotsRequester(KOREANBOTS_TOKEN).post_update_bot_info(bot.user.id, servers=len(bot.guilds))
 			logger.info(f"koreanbots | Guilds: {len(bot.guilds)}")
 		await asyncio.sleep(60)
-
-bot.loop.create_task(update_bot_info())
 
 @bot.event
 async def on_slash_command(i: disnake.CommandInteraction):
@@ -103,5 +101,8 @@ async def load_slashCommand(i: disnake.CommandInteraction, module: str):
 	except Exception as e:
 		await i.response.send_message(f"Module load failed: {module}\n```{e}```")
 
-if f"{platform.system()}" != "Windows": bot.run(TOKEN_PRODUCTION)
-else: bot.run(TOKEN_TESTBUILD)
+if f"{platform.system()}" != "Windows":
+	bot.loop.create_task(update_bot_info())
+	bot.run(TOKEN_PRODUCTION)
+else:
+	bot.run(TOKEN_TESTBUILD)

@@ -1,8 +1,8 @@
 import sqlite3
 
-def createCustomGame(userId: int, guildId: int, name: str, gameType: int=3, open: bool=False, open_user: bool=False):
+def createCustomGame(userId: int, guildId: int, name: str, gameType: int=3, open: bool=False, open_user: bool=False, channelId: int=None):
 	conn = sqlite3.connect("database/customGame.db"); c = conn.cursor()
-	c.execute("INSERT INTO games (name, guild, leader, gameType, open, user_open) VALUES (?, ?, ?, ?, ?, ?)", (name, guildId, userId, gameType, 1 if open else 0, 1 if open_user else 0))
+	c.execute("INSERT INTO games (name, guild, leader, gameType, open, user_open, channel) VALUES (?, ?, ?, ?, ?, ?, ?)", (name, guildId, userId, gameType, 1 if open else 0, 1 if open_user else 0, channelId))
 	conn.commit()
 	c.execute("SELECT id FROM games WHERE leader=? AND name=? ORDER BY id DESC", (userId, name))
 	n = c.fetchone()
@@ -38,7 +38,7 @@ def deleteCustomGame(roomId: int):
 def joinCustomGame(roomId: int, userId: int, discordId: int):
 	try:
 		conn = sqlite3.connect("database/customGame.db"); c = conn.cursor()
-		c.execute("INSERT INTO players (gameId, discord, ingame) VALUES (?, ?, ?)", (roomId, discordId, userId))
+		c.execute("INSERT INTO users(gameId, discord, ingame) VALUES (?, ?, ?)", (roomId, discordId, userId))
 		conn.commit()
 	except:
 		return False

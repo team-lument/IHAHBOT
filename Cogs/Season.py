@@ -1,6 +1,7 @@
 import disnake, aiohttp, json, datetime, time
 from config import API_URL, API_HEADER
 from disnake.ext import commands
+from module.embed import makeErrorEmbed
 from module.variables import getSeason
 
 class Season(commands.Cog):
@@ -29,6 +30,9 @@ class Season(commands.Cog):
 		async with aiohttp.ClientSession(headers=API_HEADER) as session:
 			async with session.get(API_URL + f"/v2/data/Season") as req:
 				r = json.loads(await req.text())
+				if r['code'] != 200:
+					await i.response.send_message(embed=makeErrorEmbed(f"API 요청에 실패했어요. `({r['code']})`\n-# /정보 명령어를 통해 현재 서버 상황을 확인할 수 있어요."))
+					return
 		nowSeason = 0
 		for x in r['data']: nowSeason = x['seasonID'] if x['isCurrent'] == True else nowSeason
 		endtime = datetime.datetime.strptime(str(r['data'][nowSeason]['seasonEnd']), "%Y-%m-%d %H:%M:%S")

@@ -70,12 +70,12 @@ async def getUserLevel(userId: int):
 	c.execute(f"SELECT accountLevel FROM player WHERE userId={userId}")
 	n = c.fetchone()
 	nick = getUserNickname(userId)
-	if n == None:
+	if n == None or n[0] == None:
 		async with aiohttp.ClientSession(headers=AYAGG_HEADER) as session:
 			async with session.get(AYAGG_API_URL + f"/player/by-name/{nick}") as res:
 				r = await res.json()
 				if res.status == 404: return None
-				data = r['result'][0]['level']
+				data = r['result']['level']
 				c.execute(f"UPDATE player SET accountLevel={data} WHERE userId={userId}")
 				conn.commit()
 				return data
