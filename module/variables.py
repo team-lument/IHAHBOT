@@ -1,13 +1,22 @@
-from math import ceil
+import json, aiohttp
+from math import ceil, floor
+from config import API_HEADER, API_URL
 
 def getVersion():
-	return "BETAv4"
+	return "`BETA` v4.0.4b `241213` `build-d469a7b`"
 
 def getSeason(seasonId: int):
-	seasonName = round(seasonId/2)
+	seasonName = floor(seasonId/2)
 	if seasonId == 0:     return "일반"
-	if seasonId % 2 == 0: return f"프리시즌 `({'정규' if seasonId >= 17 else 'EA'} 시즌 {seasonName-8 if seasonId >= 17 else seasonName})`"
-	else:                 return f"{'정규' if seasonId >= 17 else 'EA'} 시즌 {seasonName-8 if seasonId >= 17 else seasonName}"
+	if seasonId % 2 == 0: return f"프리시즌 ({'정규' if seasonId > 17 else 'EA'} 시즌 {seasonName-8 if seasonId > 17 else seasonName})"
+	else:                 return f"{'정규' if seasonId > 17 else 'EA'} 시즌 {seasonName-8 if seasonId > 17 else seasonName}"
+
+async def nowSeason():
+	async with aiohttp.ClientSession(headers=API_HEADER) as session:
+		async with session.get(API_URL + f"/v2/data/Season") as req:
+			r = json.loads(await req.text())
+			if r['code'] != 200: return None
+	for x in r['data']: nowSeason = x['seasonID'] if x['isCurrent'] == True else nowSeason
 
 def getTeamType(teamType: int):
 	if teamType == 1:   return '솔로'

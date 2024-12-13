@@ -6,6 +6,7 @@ from module.player import getRecord, getRecord_Match, getUserId, getUserMMRHisto
 from module.setting import getMemberSetting
 from module.statImage import generateRecordImage, generateStatImage
 from module.games import getRecordOptions
+from module.variables import nowSeason
 
 class Stat(commands.Cog):
 	def __init__(self, bot):
@@ -82,7 +83,7 @@ class Stat(commands.Cog):
 			else:
 				nick = userNames['result'][0]['name']
 				userId = userNames['result'][0]['id']
-		generateStatImage([userId, nick], await getUserStatistics(userId, 27), await getUserMMRHistory(userId))
+		generateStatImage([userId, nick], await getUserStatistics(userId, await nowSeason()), await getUserMMRHistory(userId))
 		record = await getRecord(userId)
 		await i.edit_original_message(embed=None, file=disnake.File(fp=f"Match/Stat/{userId}.png", filename=f"Stat-{userId}.png"), view=RecordListView(i.user.id, await getRecordOptions(record['result'], i), userId, record['page']))
 

@@ -2,7 +2,7 @@ import disnake, aiohttp, json, datetime, time
 from config import API_URL, API_HEADER
 from disnake.ext import commands
 from module.embed import makeErrorEmbed
-from module.variables import getSeason
+from module.variables import getSeason, nowSeason
 
 class Season(commands.Cog):
 	def __init__(self, bot):

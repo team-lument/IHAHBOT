@@ -1,5 +1,4 @@
 import disnake
-from disnake.ext import commands
 from datetime import datetime
 from module.database import getCharacterName, getCustomEmojiId
 from module.setting import getMemberSetting

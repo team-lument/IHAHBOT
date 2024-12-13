@@ -1,6 +1,7 @@
 import time, disnake, requests
 from disnake.ext import commands
 from config import API_HEADER, API_URL, AYAGG_API_URL, AYAGG_HEADER
+from module.variables import getVersion
 
 async def getStatus():
 	result = {}
@@ -50,7 +51,7 @@ class Info(commands.Cog):
 			title="이하봇 정보",
 			color=0xabcdef
 		)
-		infoEmbed.add_field(name="버전", value="`BETA` v4.0.4 `241205` `build-76db58f`", inline=False)
+		infoEmbed.add_field(name="버전", value=f"{getVersion()}", inline=False)
 		infoEmbed.add_field(name="서버 수", value=f"{len(self.bot.guilds)}개")
 		infoEmbed.add_field(name="개발자", value="라이니 `@rai_ny._.`\n741973166364164099")
 		status = await getStatus(); erar = status["erar"]; errr = status["errr"]
