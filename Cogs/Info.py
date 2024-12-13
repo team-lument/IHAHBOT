@@ -10,12 +10,14 @@ async def getStatus():
 		erar_end = time.time()*1000; erar = req.json()
 		result["erar"] = ["정상" if erar['erar'] == "FINE" else "⚠️ 점검 중!" if req.status_code != 200 else f"❌ 이용 불가 `({erar.status_code})`", erar_end-erar_start]
 	except:
+		erar = {'errr': None}
 		result["erar"] = ["❌ 이용 불가 `(알 수 없음)`", 0]
 	try:
 		errr_start = time.time()*1000
-		req = requests.get(API_URL + '/v2/data/Season', headers=API_HEADER)
+		req = requests.get(API_URL + f'/v1/freeCharacters/2', headers=API_HEADER)
 		errr_end = time.time()*1000; errr = req.json()
-		result["errr"] = ["정상" if erar['errr'] == "FINE" else "⚠️ 점검 중!" if errr['code'] == 200 else f"❌ 이용 불가 `({errr['code']})`", errr_end-errr_start]
+		if errr['code'] != 200 or len(errr['freeCharacters']) == 0: result["errr"] = [f"❌ 이용 불가 `(점검 중)`", errr_end-errr_start]
+		else: result["errr"] = ["정상" if erar['errr'] == "FINE" else "⚠️ 점검 중!", errr_end-errr_start]
 	except:
 		result["errr"] = ["❌ 이용 불가 `(알 수 없음)`", 0]
 	return result
@@ -48,7 +50,7 @@ class Info(commands.Cog):
 			title="이하봇 정보",
 			color=0xabcdef
 		)
-		infoEmbed.add_field(name="버전", value="`BETA` v4.0.4 `241123` `build-216def0`", inline=False)
+		infoEmbed.add_field(name="버전", value="`BETA` v4.0.4 `241205` `build-76db58f`", inline=False)
 		infoEmbed.add_field(name="서버 수", value=f"{len(self.bot.guilds)}개")
 		infoEmbed.add_field(name="개발자", value="라이니 `@rai_ny._.`\n741973166364164099")
 		status = await getStatus(); erar = status["erar"]; errr = status["errr"]

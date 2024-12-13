@@ -6,8 +6,8 @@ def getVersion():
 def getSeason(seasonId: int):
 	seasonName = round(seasonId/2)
 	if seasonId == 0:     return "일반"
-	if seasonId % 2 == 0: return f"프리시즌 {seasonName if seasonId <= 16 else seasonName-9}"
-	else:                 return f"{'정규' if seasonId >= 17 else 'EA'} 시즌 {seasonName-9 if seasonId >= 17 else seasonName}"
+	if seasonId % 2 == 0: return f"프리시즌 `({'정규' if seasonId >= 17 else 'EA'} 시즌 {seasonName-8 if seasonId >= 17 else seasonName})`"
+	else:                 return f"{'정규' if seasonId >= 17 else 'EA'} 시즌 {seasonName-8 if seasonId >= 17 else seasonName}"
 
 def getTeamType(teamType: int):
 	if teamType == 1:   return '솔로'
