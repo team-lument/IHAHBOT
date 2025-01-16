@@ -111,7 +111,7 @@ def generateRecordImage(x: dict, disable: dict = {"nickname": 0, "gameId": 0}):
 
 		# Game Type
 		seasonId = x['seasonId']
-		mtm = int(x['queueType'])
+		mtm = x['queueType']
 
 		if mtm == 4:
 			GameType = Image.open("image/Background/CobaltGame.png")
@@ -123,15 +123,15 @@ def generateRecordImage(x: dict, disable: dict = {"nickname": 0, "gameId": 0}):
 			GameType = Image.open("image/Background/RankedGame.png")
 			image.paste(GameType, (1024, 336), GameType)
 		
-		if mtm == 3:
+		if mtm == "3":
 			GameType = Image.open("image/Background/TeamSquad.png")
-			image.paste(GameType, (1476, 336), GameType)
-		elif mtm == 2:
+		elif mtm == "2":
 			GameType = Image.open("image/Background/TeamDuo.png")
-			image.paste(GameType, (1476, 336), GameType)
-		elif mtm == 1:
+		elif mtm == "1":
 			GameType = Image.open("image/Background/TeamSolo.png")
-			image.paste(GameType, (1476, 336), GameType)
+		elif mtm == "u":
+			GameType = Image.open("image/Background/TeamUnion.png")
+		image.paste(GameType, (1476, 336), GameType)
 		print("Game Type Loaded")
 
 		# Game Rank
@@ -176,7 +176,7 @@ def generateRecordImage(x: dict, disable: dict = {"nickname": 0, "gameId": 0}):
 		# RP
 		font = ImageFont.truetype('Inter-Bold.ttf', size=80)
 		rpAdder = (3-len(str(x['afterMMR']-x['recordedMMR'])))*26
-		if mtm <= 3 and seasonId > 0:
+		if mtm != "u" and int(mtm) <= 3 and seasonId > 0:
 			if x['afterMMR']-x['recordedMMR'] >= 0:
 				draw.text((1664+rpAdder, 516), f"+", font=font, fill="#039C00")
 				draw.text((1718+rpAdder, 516), f"{x['afterMMR']-x['recordedMMR']}", font=font, fill="#000000")
