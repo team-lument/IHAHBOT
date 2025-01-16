@@ -3,7 +3,7 @@ from math import ceil, floor
 from config import API_HEADER, API_URL
 
 def getVersion():
-	return "`BETA` v4.0.4b `241213` `build-d469a7b`"
+	return "`BETA` v4.0.4b `241213` `build-fe45c60`"
 
 def getSeason(seasonId: int):
 	seasonName = floor(seasonId/2)
@@ -16,7 +16,9 @@ async def nowSeason():
 		async with session.get(API_URL + f"/v2/data/Season") as req:
 			r = json.loads(await req.text())
 			if r['code'] != 200: return None
+	nowSeason = 0
 	for x in r['data']: nowSeason = x['seasonID'] if x['isCurrent'] == True else nowSeason
+	return nowSeason
 
 def getTeamType(teamType: int):
 	if teamType == 1:   return '솔로'
