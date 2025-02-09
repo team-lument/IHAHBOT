@@ -53,7 +53,7 @@ class Info(commands.Cog):
 		)
 		infoEmbed.add_field(name="버전", value=f"{getVersion()}", inline=False)
 		infoEmbed.add_field(name="서버 수", value=f"{len(self.bot.guilds)}개")
-		infoEmbed.add_field(name="개발자", value="라이니 `@rai_ny._.`\n741973166364164099")
+		infoEmbed.add_field(name="개발자", value="라이니 `@rai_ny._.`\n741973166364164099\n이터널 리턴 [`샨티`](https://aya.gg/ko/players/샨티)")
 		status = await getStatus(); erar = status["erar"]; errr = status["errr"]
 		pingEmbed = disnake.Embed(
 			title="데이터 서버 상태 및 레이턴시",

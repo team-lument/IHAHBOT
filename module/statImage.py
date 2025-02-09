@@ -1,3 +1,4 @@
+import platform
 import os, sqlite3, logging
 from PIL import Image, ImageDraw, ImageFont
 from module.variables import getTierName, getSeason
