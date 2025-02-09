@@ -3,7 +3,7 @@ from math import ceil, floor
 from config import API_HEADER, API_URL
 
 def getVersion():
-	return "`BETA` v4.0.4b `241213` `build-fe45c60`"
+	return "`BETA` v4.0.6 `250210` `build-c354fc9`"
 
 def getSeason(seasonId: int):
 	seasonName = floor(seasonId/2)
