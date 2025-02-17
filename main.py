@@ -4,7 +4,7 @@ from koreanbots import KoreanbotsRequester
 from config import *
 from module.log import logDB
 
-bot = commands.Bot(command_prefix=commands.when_mentioned, test_guilds=[742188157424107679,812664224512868382] if f"{platform.system()}" == "Windows" else None)
+bot = commands.Bot(command_prefix=commands.when_mentioned, test_guilds=[742188157424107679,911042155504631859] if f"{platform.system()}" == "Windows" else None)
 bot.remove_command('help')
 
 logger = logging.getLogger("ihahbot.main")

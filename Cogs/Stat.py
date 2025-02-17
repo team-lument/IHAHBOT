@@ -74,6 +74,9 @@ class Stat(commands.Cog):
 					lists.append(disnake.SelectOption(
 						label=x['name']
 					))
+				if len(lists) == 0:
+					await i.edit_original_message(embed=makeErrorEmbed("검색된 유저명이 없어요!"))
+					return
 				embed = disnake.Embed(
 					title="검색 결과",
 					description="일치하는 유저명이 없어 검색을 시도했어요!\n아래 검색 결과 중에서 원하는 유저를 선택해주세요!"
@@ -137,7 +140,7 @@ class RecordList(disnake.ui.Select):
 			await i.edit_original_message(embed=embed)
 			error = generateRecordImage(match, disable={"nickname": getMemberSetting(i.user.id, i.guild.id, "hideNick"), "gameId": getMemberSetting(i.user.id, i.guild.id, "hideGameId")})
 			if error:
-				await i.edit_original_message(embed=makeErrorEmbed(f"이미지 생성에 실패했어요.\n이 경우 DB에 등록되지 않은 파일이 있는 경우가 대다수에요.\n아래 에러 내용을 [스타라이트 스튜디오](https://discord.gg/cf3D2HCzEh)로 전달해주세요!\n```{error}```"))
+				await i.edit_original_message(embed=makeErrorEmbed(f"이미지 생성에 실패했어요.\n이 경우 DB에 등록되지 않은 파일이 있는 경우가 대다수에요.\n현재 상황과 아래 에러 내용을 제 DM으로 전달해주세요!\n```{error}```"))
 				return
 			await i.edit_original_message(embed=None,file=disnake.File(fp=f"Match/{self._userId}.png", filename=f"Match-{self._userId}.png"))
 		else:

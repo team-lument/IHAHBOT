@@ -44,7 +44,7 @@ async def getUserId(nick: str):
 		async with aiohttp.ClientSession(headers=API_HEADER) as session:
 			async with session.get(API_URL + f"/v1/user/nickname?query={nick}") as res:
 				r = await res.json()
-				if r['status'] == 404:
+				if r['code'] == 404:
 					return None
 				c.execute(f"SELECT * FROM player WHERE userId={r['user']['userNum']}")
 				if c.fetchone():
