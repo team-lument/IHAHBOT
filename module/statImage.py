@@ -114,20 +114,13 @@ def generateRecordImage(x: dict, disable: dict = {"nickname": 0, "gameId": 0}):
 		seasonId = x['seasonId']
 		mtm = x['queueType']
 		if mtm == "u":
-			GameType = Image.open("image/Background/NormalGame.png")
+			GameType = Image.open("image/Background/UnionGame.png")
 			image.paste(GameType, (1024, 336), GameType)
-			MatchingType = Image.open("image/Background/TeamUnion.png")
-			image.paste(MatchingType, (1476, 336), MatchingType)
+		elif int(mtm) == 4:
+			MatchingType = Image.open("image/Background/CoabltGame.png")
+			image.paste(GameType, (1024, 336), GameType)
 		else:
 			mtm = int(mtm)
-			if mtm == 4:
-				GameType = Image.open("image/Background/CobaltGame.png")
-			if mtm <= 3 and seasonId == 0:
-				GameType = Image.open("image/Background/NormalGame.png")
-			elif mtm <= 3 and seasonId > 0:
-				GameType = Image.open("image/Background/RankedGame.png")
-			image.paste(GameType, (1024, 336), GameType)
-			
 			if mtm == 3:
 				MatchingType = Image.open("image/Background/TeamSquad.png")
 			elif mtm == 2:
@@ -135,6 +128,11 @@ def generateRecordImage(x: dict, disable: dict = {"nickname": 0, "gameId": 0}):
 			elif mtm == 1:
 				MatchingType = Image.open("image/Background/TeamSolo.png")
 			image.paste(MatchingType, (1476, 336), MatchingType)
+			if seasonId == 0:
+				GameType = Image.open("image/Background/NormalGame.png")
+			elif seasonId > 0:
+				GameType = Image.open("image/Background/RankedGame.png")
+			image.paste(GameType, (1024, 336), GameType)
 		print("Game Type Loaded")
 
 		# Game Rank

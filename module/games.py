@@ -9,14 +9,23 @@ async def getRecordOptions(r: dict, i: disnake.CommandInteraction, thisMatch: bo
 	_i = 0
 	for x in r:
 		_i += 1
-		mtm = int(x['queueType'])
-		seasonNum = x['seasonId']
-		season = f"{getSeason(seasonNum)} {getTeamType(mtm)}" if mtm != 4 else "코발트 프로토콜"
-		character = getCharacterName(x['characterId'], getMemberSetting(i.user.id, i.guild.id, "locale"))
-		assistant = x['assist'] if mtm != 1 else "-"
 		rank = int(x['rank'])
-		if mtm == 4: rank = "승리" if rank == 1 else "패배"
+		assistant = x['assist']
+		seasonNum = x['seasonId']
+		character = getCharacterName(x['characterId'], getMemberSetting(i.user.id, i.guild.id, "locale"))
 		valueId = x['matchId'] if not thisMatch else x['playerId']
+		if x['queueType'] != "u":
+			mtm = int(x['queueType'])
+		else:
+			mtm = 0
+			season = "유니온 대전"
+		if mtm == 4:
+			mtm = 4
+			season = "코발트 프로토콜"
+			rank = "승리" if rank == 1 else "패배"
+		elif mtm != 0:
+			season = f"{getSeason(seasonNum)} {getTeamType(mtm)}"
+			assistant = x['assist'] if mtm != 1 else "-"
 		if type(rank) == int:
 			emoji=disnake.PartialEmoji(
 				name=f"rank{rank}",

@@ -80,7 +80,8 @@ class ChangeView_Story(disnake.ui.Button):
 			title=f"{characterCode} {characterKorean} / {fullName}",
 			description=f"**\"{story[0]}\"**\n\n{storyFull}"
 		)
-		embed.set_image(file=disnake.File(fp=f"image/CharacterInfo/{characterName}.png", filename=f"IHBv4_ER_{characterName}_Background.png"))
+		try: embed.set_image(file=disnake.File(fp=f"image/CharacterInfo/{characterName}.png", filename=f"IHBv4_ER_{characterName}_Background.png"))
+		except FileNotFoundError: pass
 		await i.response.edit_message(embed=embed, view=StoryView(await makeSkinList(self._characterId), self._characterId))
 
 class ChangeView_Character(disnake.ui.Button):
