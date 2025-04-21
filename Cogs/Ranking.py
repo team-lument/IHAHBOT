@@ -22,7 +22,7 @@ class PreviousPage(disnake.ui.Button['RankingView']):
 		if self._userId == i.user.id:
 			await i.response.defer()
 			if self._server != 0:
-				ranking = (await getRanking_LP_Server(self._server))['topRanks'][self._page*25:(self._page+1)*25+1]
+				ranking = (await getRanking_LP_Server(self._server))['topRanks'][(self._page-1)*25:self._page*25+1]
 				rankList = makeRanking_LP(ranking)
 			else:
 				ranking = await getRanking_LP(floor((self._page-1)/2))
@@ -44,7 +44,7 @@ class NextPage(disnake.ui.Button['RankingView']):
 		if self._userId == i.user.id:
 			await i.response.defer()
 			if self._server != 0:
-				ranking = (await getRanking_LP_Server(self._server))['topRanks'][self._page*25:(self._page+1)*25+1]
+				ranking = (await getRanking_LP_Server(self._server))['topRanks'][(self._page+1)*25:(self._page+2)*25+1]
 				rankList = makeRanking_LP(ranking)
 			else:
 				ranking = await getRanking_LP(floor((self._page+1)/2))
