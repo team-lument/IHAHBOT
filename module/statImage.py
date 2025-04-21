@@ -117,7 +117,7 @@ def generateRecordImage(x: dict, disable: dict = {"nickname": 0, "gameId": 0}):
 			GameType = Image.open("image/Background/UnionGame.png")
 			image.paste(GameType, (1024, 336), GameType)
 		elif int(mtm) == 4:
-			MatchingType = Image.open("image/Background/CoabltGame.png")
+			GameType = Image.open("image/Background/CobaltGame.png")
 			image.paste(GameType, (1024, 336), GameType)
 		else:
 			mtm = int(mtm)
@@ -212,7 +212,8 @@ def generateRecordImage(x: dict, disable: dict = {"nickname": 0, "gameId": 0}):
 			im = Image.open(f"image/Trait/none.png").resize((128, 128))
 			image.paste(im, (892, 842), im)
 			logger.error(f"statImage.makeImage | firstCore {trait['firstCore']} Image not Found")
-		coord = [(1038, 842), (1184, 842)]
+		coord = [(1038, 842), (1184, 842), (1330, 842), (1476, 842)]
+		_tmp = 0
 		for tmp in range(len(trait['firstSub'])):
 			print(f"firstSub{tmp}", trait['firstSub'][tmp])
 			if os.path.isfile(f"image/Trait/{trait['firstSub'][tmp]}.png"):
@@ -222,16 +223,16 @@ def generateRecordImage(x: dict, disable: dict = {"nickname": 0, "gameId": 0}):
 				im = Image.open(f"image/Trait/none.png").resize((128, 128))
 				image.paste(im, coord[tmp], im)
 				logger.error(f"statImage.makeImage | firstSub{tmp} {trait['firstSub'][tmp]} Image not Found")
+			_tmp += 1
 		print("Trait(Main) Loaded")
-		coord = [(1330, 842), (1476, 842)]
 		for tmp in range(len(trait['secondSub'])):
 			print(f"secondSub{tmp}", trait['secondSub'][tmp])
 			if os.path.isfile(f"image/Trait/{trait['secondSub'][tmp]}.png"):
 				im = Image.open(f"image/Trait/{trait['secondSub'][tmp]}.png").resize((128, 128))
-				image.paste(im, coord[tmp], im)
+				image.paste(im, coord[_tmp+tmp], im)
 			else:
 				im = Image.open(f"image/Trait/none.png").resize((128, 128))
-				image.paste(im, coord[tmp], im)
+				image.paste(im, coord[_tmp+tmp], im)
 				logger.error(f"statImage.makeImage | secondSub{tmp} {trait['secondSub'][tmp]} Image not Found")
 		print("Trait(Sub) Loaded")
 
