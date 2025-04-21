@@ -3,7 +3,7 @@ from math import ceil, floor
 from config import API_HEADER, API_URL
 
 def getVersion():
-	return "`BETA` v4.1.1 `250406` `build-28aa309`"
+	return "`BETA` v4.1.1 `250406` `build-c198e9a`"
 
 def getSeason(seasonId: int):
 	seasonName = floor(seasonId/2)
@@ -41,7 +41,7 @@ def getTierName(mmr: int, demigod: bool = False, eternity: bool = False):
 		return [f"플래티넘 {roma[4-ceil((mmr-3600)/350)]}", f"{(mmr-3600)%350}점", "platinum"]
 	elif mmr < 6400:
 		return [f"다이아몬드 {roma[4-ceil((mmr-5000)/350)]}", f"{(mmr-5000)%350}점", "diamond"]
-	elif mmr < 6800:
+	elif mmr < 7100:
 		return [f"메테오라이트", f"{mmr-6400}점", "meteorite"]
 	else:
-		return [f"이터니티", f"{mmr-6800}점", "eternity"] if eternity else [f"데미갓", f"{mmr-6800}점", "demigod"] if demigod else [f"미스릴", f"{mmr-6800}점", "mithril"]
+		return [f"이터니티", f"{mmr-7800}점", "eternity"] if eternity else [f"데미갓", f"{mmr-7800}점", "demigod"] if demigod else [f"미스릴", f"{mmr-7100}점", "mithril"]
