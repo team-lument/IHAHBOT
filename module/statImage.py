@@ -1,6 +1,7 @@
 import platform
 import os, sqlite3, logging
 from PIL import Image, ImageDraw, ImageFont
+import plotly
 from module.variables import getTierName, getSeason
 from module.database import *
 import urllib.request
@@ -203,38 +204,39 @@ def generateRecordImage(x: dict, disable: dict = {"nickname": 0, "gameId": 0}):
 		print("Weapon Loaded")
 		
 		# Trait
-		trait = x['preferences']['traits']
-		print("firstCore", trait['firstCore'])
-		if os.path.isfile(f"image/Trait/{trait['firstCore']}.png"):
-			im = Image.open(f"image/Trait/{trait['firstCore']}.png").resize((128, 128))
-			image.paste(im, (892, 842), im)
-		else:
-			im = Image.open(f"image/Trait/none.png").resize((128, 128))
-			image.paste(im, (892, 842), im)
-			logger.error(f"statImage.makeImage | firstCore {trait['firstCore']} Image not Found")
-		coord = [(1038, 842), (1184, 842), (1330, 842), (1476, 842)]
-		_tmp = 0
-		for tmp in range(len(trait['firstSub'])):
-			print(f"firstSub{tmp}", trait['firstSub'][tmp])
-			if os.path.isfile(f"image/Trait/{trait['firstSub'][tmp]}.png"):
-				im = Image.open(f"image/Trait/{trait['firstSub'][tmp]}.png").resize((128, 128))
-				image.paste(im, coord[tmp], im)
+		if int(mtm) != 4:
+			trait = x['preferences']['traits']
+			print("firstCore", trait['firstCore'])
+			if os.path.isfile(f"image/Trait/{trait['firstCore']}.png"):
+				im = Image.open(f"image/Trait/{trait['firstCore']}.png").resize((128, 128))
+				image.paste(im, (892, 842), im)
 			else:
 				im = Image.open(f"image/Trait/none.png").resize((128, 128))
-				image.paste(im, coord[tmp], im)
-				logger.error(f"statImage.makeImage | firstSub{tmp} {trait['firstSub'][tmp]} Image not Found")
-			_tmp += 1
-		print("Trait(Main) Loaded")
-		for tmp in range(len(trait['secondSub'])):
-			print(f"secondSub{tmp}", trait['secondSub'][tmp])
-			if os.path.isfile(f"image/Trait/{trait['secondSub'][tmp]}.png"):
-				im = Image.open(f"image/Trait/{trait['secondSub'][tmp]}.png").resize((128, 128))
-				image.paste(im, coord[_tmp+tmp], im)
-			else:
-				im = Image.open(f"image/Trait/none.png").resize((128, 128))
-				image.paste(im, coord[_tmp+tmp], im)
-				logger.error(f"statImage.makeImage | secondSub{tmp} {trait['secondSub'][tmp]} Image not Found")
-		print("Trait(Sub) Loaded")
+				image.paste(im, (892, 842), im)
+				logger.error(f"statImage.makeImage | firstCore {trait['firstCore']} Image not Found")
+			coord = [(1038, 842), (1184, 842), (1330, 842), (1476, 842)]
+			_tmp = 0
+			for tmp in range(len(trait['firstSub'])):
+				print(f"firstSub{tmp}", trait['firstSub'][tmp])
+				if os.path.isfile(f"image/Trait/{trait['firstSub'][tmp]}.png"):
+					im = Image.open(f"image/Trait/{trait['firstSub'][tmp]}.png").resize((128, 128))
+					image.paste(im, coord[tmp], im)
+				else:
+					im = Image.open(f"image/Trait/none.png").resize((128, 128))
+					image.paste(im, coord[tmp], im)
+					logger.error(f"statImage.makeImage | firstSub{tmp} {trait['firstSub'][tmp]} Image not Found")
+				_tmp += 1
+			print("Trait(Main) Loaded")
+			for tmp in range(len(trait['secondSub'])):
+				print(f"secondSub{tmp}", trait['secondSub'][tmp])
+				if os.path.isfile(f"image/Trait/{trait['secondSub'][tmp]}.png"):
+					im = Image.open(f"image/Trait/{trait['secondSub'][tmp]}.png").resize((128, 128))
+					image.paste(im, coord[_tmp+tmp], im)
+				else:
+					im = Image.open(f"image/Trait/none.png").resize((128, 128))
+					image.paste(im, coord[_tmp+tmp], im)
+					logger.error(f"statImage.makeImage | secondSub{tmp} {trait['secondSub'][tmp]} Image not Found")
+			print("Trait(Sub) Loaded")
 
 		# Tactical Skill
 		if x['spellId']:
@@ -329,11 +331,8 @@ def generateMMRHistoryImage(userId: int, data: dict, tier: str):
 	day = datetime.today() + relativedelta(days=-16)
 	for _ in range(17):
 		if day.strftime("%y%m%d") in keys: dataIndex = day.strftime("%y%m%d")
-		if (
-			day.strftime("%y%m%d") != datetime.today().strftime("%y%m%d")
-	  	) and not (
-			(day + relativedelta(days=1)).strftime("%y%m%d") in keys
-		):
+		if (day.strftime("%y%m%d") != datetime.today().strftime("%y%m%d")) \
+		and not ((day + relativedelta(days=1)).strftime("%y%m%d") in keys):
 			opacity.append(0)
 			tierColors.append("rgba(0, 0, 0, 0)")
 		else:
@@ -389,20 +388,22 @@ def generateMMRHistoryImage(userId: int, data: dict, tier: str):
 			)
 		)
 	)
-	fig.write_image(f"Match/mmr-history/{userId}.png")
+	# plotly.io.orca.config.executable = '/root/miniconda3/bin/orca' if f"{platform.system()}" != "Windows" else 'C:/Users/User/anaconda3/pkgs/plotly-orca-1.3.1-1/orca_app/orca.exe' 
+	# plotly.io.orca.config.use_xvfb = True if f"{platform.system()}" != "Windows" else False
+	# fig.write_image(f"Match/mmr-history/{userId}.png", format="png", engine="orca")
+	fig.write_image(f"Match/mmr-history/{userId}.png", format="png", engine="kaleido")
 
 def generateStatImage(user: list, x: dict, history: dict):
 	image = Image.open("image/Background/Tier/_Background.png"); draw = ImageDraw.Draw(image)
 	userId = user[0]; userName = user[1]
 	draw.text((75, 25), f"{userName}", font=ImageFont.truetype('Freesentation-7Bold.ttf', size=40), fill="#FFFFFF")
-	draw.text((30, 75), f"{x['overall']['plays']}전 {x['overall']['wins']}승 ({round((x['overall']['wins']/x['overall']['plays'])*100, 1)}%)", font=ImageFont.truetype('Freesentation-7Bold.ttf', size=20), fill="#959595")
-
+	draw.text((30, 75), f"{x['overall']['plays']}전 {x['overall']['wins']}승 ({round((x['overall']['wins']/x['overall']['plays'])*100, 1) if x['overall']['plays'] >= 1 else '-'}%)", font=ImageFont.truetype('Freesentation-7Bold.ttf', size=20), fill="#959595")
 	if 'seasonQueueData' in x:
 		tier = getTierName(x['seasonQueueData']['mmr'], x['seasonQueueData']['isDemigod'], x['seasonQueueData']['isEternity'])
 
 		tierBackground = Image.open(f"image/Background/Tier/{tier[2].capitalize()}.png")
 		image.paste(tierBackground, (25, 112), tierBackground)
-
+		
 		statusTitle  = ImageFont.truetype('Freesentation-7Bold.ttf', size=13)
 		statusObject = ImageFont.truetype('Freesentation-7Bold.ttf', size=16)
 
@@ -411,7 +412,7 @@ def generateStatImage(user: list, x: dict, history: dict):
 		draw.text((123, 190), f"{x['seasonQueueData']['mmr']}", font=ImageFont.truetype('Inter-Bold.ttf', size=40), fill=rankTierColors[tier[2]])
 		draw.text((255+(-30*(5-len(f"{x['seasonQueueData']['mmr']}")))+(5 if len(f"{x['seasonQueueData']['mmr']}") >= 4 else 10), 200), "RP", font=ImageFont.truetype('Inter-Bold.ttf', size=30), fill="#FFFFFF")
 		draw.text((412, 408), "GENERATED BY IHAHBOT", font=ImageFont.truetype('Inter-Bold.ttf', size=15), fill="#959595")
-
+		
 		draw.text(( 45, 270), "평균 K·D·A", font=statusTitle, fill="#E0E0E0")
 		draw.text((165, 270), "승률", font=statusTitle, fill="#E0E0E0")
 		draw.text((230, 270), "반타작률", font=statusTitle, fill="#E0E0E0")
@@ -443,7 +444,7 @@ def generateStatImage(user: list, x: dict, history: dict):
 		foreground = Image.new("RGBA", (image.width, image.height), (0, 0, 0, 0))
 		foreground.paste(RPHistory, (930, 525), RPHistory)
 		image = Image.alpha_composite(image, foreground)
-
+	
 	image.save(f"Match/Stat/{userId}.png")
 
 def getItemSlot(itemId: int):

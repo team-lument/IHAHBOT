@@ -217,24 +217,18 @@ class Ranking(commands.Cog):
 		ranking = (await getRanking_LP_Server(server))['topRanks']
 		rankList = makeRanking_LP(ranking)
 		highRank = {
-			"eternity": {
-				"mmr": ranking[300]['mmr'],
-				"rank": 300
-			},
-			"demigod": {
-				"mmr": 7800,
-				"rank": 1000
-			}
+			"eternity": { "mmr": ranking[299]['mmr'], "rank": 300 },
+			"demigod": { "mmr": ranking[999]['mmr'], "rank": 1000 }
 		}
 		for x in range(1,301):
-			if ranking[x]['mmr'] < 7800:
+			if ranking[x]['mmr'] < 7800 and ranking[x]['rank'] <= 300:
 				highRank['eternity']['mmr'] = ranking[x-1]['mmr']
 				highRank['eternity']['rank'] = ranking[x-1]['rank']
 				break
 		for x in range(300,1000):
-			if ranking[x]['mmr'] < 7800:
-				highRank['demigod']['mmr'] = ranking[x-1]['mmr']
-				highRank['demigod']['rank'] = ranking[x-1]['rank']
+			if ranking[x]['mmr'] < 7800 and ranking[x]['rank'] <= 1000:
+				highRank['demigod']['mmr'] = 7800
+				highRank['demigod']['rank'] = ranking[x]['rank']
 				break
 		embed = disnake.Embed(
 			title=f"{serverList[server]} RP 랭킹",

@@ -1,4 +1,7 @@
 __pycache__
 
 image/
+image/*
 test/
+Match/
+Match/*
