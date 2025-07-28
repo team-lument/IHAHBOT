@@ -264,7 +264,7 @@ def generateRecordImage(x: dict, disable: dict = {"nickname": 0, "gameId": 0}):
 			[[(61, 31, 33), (144, 49, 49)], "mythic"]
 		]
 		equip = x['preferences']['equipments']
-		_matchVersion = int(x['matchVersion'][2:4])
+		_matchVersion = x['matchVersion']
 		for i in range(5):
 			print(i, equip[i])
 			_slot = getItemSlot(int(equip[i]))
@@ -458,7 +458,7 @@ def getItemSlot(itemId: int):
 
 def saveItemImage(itemId: int, version: int):
 	try:
-		urllib.request.urlretrieve(f"https://cdn.dak.gg/assets/er/game-assets/1.{version}.0/ItemIcon_{itemId}.png", "image/Items/temp.png")
+		urllib.request.urlretrieve(f"https://cdn.dak.gg/assets/er/game-assets/{version}/ItemIcon_{itemId}.png", "image/Items/temp.png")
 		bg = Image.open("image/Items/save.png")
 		item = Image.open(f"image/Items/temp.png")
 		bg.paste(item, (int((bg.width - item.width)/2), 0), item)
