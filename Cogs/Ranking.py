@@ -113,8 +113,7 @@ class RankList(disnake.ui.Select):
 			embed = disnake.Embed(
 				title=f"{nick}님의 전적",
 				description="원하는 기록을 선택하고 전적을 확인해보세요!"
-			)
-			embed.set_footer(text="Data from aya.gg")
+			).set_footer(text="이하봇 • 팀 루멘트가 ♥️로 제작")
 			await i.edit_original_message(embed=embed, view=RecordListView(i.user.id, await getRecordOptions(record['result'], i), userId, record['page'], nick))
 		else:
 			await i.response.send_message(embed=makeErrorEmbed("선택권은 메시지 주인에게만 있어요!"), ephemeral=True)
@@ -220,20 +219,21 @@ class Ranking(commands.Cog):
 			"eternity": { "mmr": ranking[299]['mmr'], "rank": 300 },
 			"demigod": { "mmr": ranking[999]['mmr'], "rank": 1000 }
 		}
-		for x in range(1,301):
-			if ranking[x]['mmr'] < 7800 and ranking[x]['rank'] <= 300:
+		for x in range(1,301 if len(ranking) >= 300 else len(ranking)):
+			if ranking[x]['mmr'] < 7900 and ranking[x]['rank'] <= 300:
 				highRank['eternity']['mmr'] = ranking[x-1]['mmr']
 				highRank['eternity']['rank'] = ranking[x-1]['rank']
 				break
-		for x in range(300,1000):
-			if ranking[x]['mmr'] < 7800 and ranking[x]['rank'] <= 1000:
-				highRank['demigod']['mmr'] = 7800
-				highRank['demigod']['rank'] = ranking[x]['rank']
-				break
+		if len(ranking) > 300:
+			for x in range(300,len(ranking)):
+				if ranking[x]['mmr'] < 7900 and ranking[x]['rank'] <= 1000:
+					highRank['demigod']['mmr'] = 7900
+					highRank['demigod']['rank'] = ranking[x]['rank']
+					break
 		embed = disnake.Embed(
 			title=f"{serverList[server]} RP 랭킹",
-			description=f"이터니티 컷: {highRank['eternity']['mmr']}점 ({highRank['eternity']['rank']}위)\n-# 7800점 이상, 300위 이내\n\n데미갓 컷: {highRank['demigod']['mmr']}점 ({highRank['demigod']['rank']}위)\n-# 7800점 이상, 1000위 이내"
-		)
+			description=f"이터니티 컷: {highRank['eternity']['mmr']}점 ({highRank['eternity']['rank']}위)\n-# 7900점 이상, 300위 이내\n\n데미갓 컷: {highRank['demigod']['mmr']}점 ({highRank['demigod']['rank']}위)\n-# 7900점 이상, 1000위 이내"
+		).set_footer(text="이하봇 • 팀 루멘트가 ♥️로 제작")
 		await i.edit_original_message(embed=embed, view=RankingView(i.user.id, 0, 40, rankList, server=server))#(ranking['page'][1]-1)*2, rankList))
 	
 	async def artisan_autocomplete(i: disnake.CommandInteraction, character: str):
@@ -244,45 +244,47 @@ class Ranking(commands.Cog):
 			if len(listRes) < 25: listRes.append(disnake.OptionChoice(name=x[1] if i.locale is disnake.Locale.ko else x[2], value=x[0]))
 		return listRes
 
-	@ranking_slashCommand.sub_command(
-		name=disnake.Localized(
-			"artisan",
-			data={
-				disnake.Locale.ko: "장인력"
-			}
-		),
-		description=disnake.Localized(
-			"Get artisan ranking for now season",
-			data={
-				disnake.Locale.ko: "프리 시즌이 아닌 현재 시즌의 장인력 랭킹을 불러옵니다."
-			}
-		)
-	)
-	async def ranking_artisan_cmd(
-		self, i: disnake.CommandInteraction,
-		character: int = commands.Param(
-			name=disnake.Localized(
-				"character",
-				data={
-					disnake.Locale.ko: "실험체"
-				}
-			),
-			description=disnake.Localized(
-				"Character Name.",
-				data={
-					disnake.Locale.ko: "실험체 이름"
-				}
-			),
-			autocomplete=artisan_autocomplete
-		)
-	):
-		await i.response.defer()
-		ranking = await getRanking_Artisan(characterId=character)
-		rankList = makeRanking(ranking['result'], artisan=True)
-		embed = disnake.Embed(
-			title=f"{getCharacterName(character)} 장인력 랭킹"
-		)
-		await i.edit_original_message(embed=embed, view=RankingView(i.user.id, 0, (ranking['page'][1]-1)*2, rankList, True))
+	# aya.gg terminated 😭
+	
+	# @ranking_slashCommand.sub_command(
+	# 	name=disnake.Localized(
+	# 		"artisan",
+	# 		data={
+	# 			disnake.Locale.ko: "장인력"
+	# 		}
+	# 	),
+	# 	description=disnake.Localized(
+	# 		"Get artisan ranking for now season",
+	# 		data={
+	# 			disnake.Locale.ko: "프리 시즌이 아닌 현재 시즌의 장인력 랭킹을 불러옵니다."
+	# 		}
+	# 	)
+	# )
+	# async def ranking_artisan_cmd(
+	# 	self, i: disnake.CommandInteraction,
+	# 	character: int = commands.Param(
+	# 		name=disnake.Localized(
+	# 			"character",
+	# 			data={
+	# 				disnake.Locale.ko: "실험체"
+	# 			}
+	# 		),
+	# 		description=disnake.Localized(
+	# 			"Character Name.",
+	# 			data={
+	# 				disnake.Locale.ko: "실험체 이름"
+	# 			}
+	# 		),
+	# 		autocomplete=artisan_autocomplete
+	# 	)
+	# ):
+	# 	await i.response.defer()
+	# 	ranking = await getRanking_Artisan(characterId=character)
+	# 	rankList = makeRanking(ranking['result'], artisan=True)
+	# 	embed = disnake.Embed(
+	# 		title=f"{getCharacterName(character)} 장인력 랭킹"
+	# 	).set_footer(text="이하봇 • 팀 루멘트가 ♥️로 제작")
+	# 	await i.edit_original_message(embed=embed, view=RankingView(i.user.id, 0, (ranking['page'][1]-1)*2, rankList, True))
 
 def makeRanking(r: dict, back: bool = False, artisan: bool = False):
 	rankList = []
@@ -299,7 +301,7 @@ def makeRanking_LP(r: dict):
 		if len(rankList) < 25:
 			x = r[tmp]; rank = x['rank']
 			if tmp > 0 and x['mmr'] == r[tmp-1]['mmr']: rank -= 1
-			rankList.append(disnake.SelectOption(label=f"#{rank} {x['nickname']}", description=f"{' '.join(getTierName(x['mmr'], x['mmr'] >= 7800 and x['rank'] <= 300, x['mmr'] >= 7800 and x['rank'] <= 1000)[0:1])} ({x['mmr']}LP)", value=x['userNum']))
+			rankList.append(disnake.SelectOption(label=f"#{rank} {x['nickname']}", description=f"{' '.join(getTierName(x['mmr'], x['mmr'] >= 7900 and x['rank'] <= 300, x['mmr'] >= 7900 and x['rank'] <= 1000)[0:1])} ({x['mmr']}LP)", value=x['nickname']))
 	return rankList
 
 def setup(bot: commands.Bot):

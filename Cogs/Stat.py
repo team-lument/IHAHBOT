@@ -80,7 +80,7 @@ class Stat(commands.Cog):
 				embed = disnake.Embed(
 					title="검색 결과",
 					description="일치하는 유저명이 없어 검색을 시도했어요!\n아래 검색 결과 중에서 원하는 유저를 선택해주세요!"
-				)
+				).set_footer(text="이하봇 • 팀 루멘트가 ♥️로 제작")
 				await i.edit_original_message(embed=embed, view=userSearchView(lists, i.user.id))
 				return
 			else:
@@ -127,15 +127,12 @@ class RecordList(disnake.ui.Select):
 		if self._discordId == i.user.id:
 			await i.response.defer()
 			embed = disnake.Embed(
-				title=f"전적 데이터 획득 중..."
+				title=f"{match['recordedName']}님의 전적"
 			)
-			embed.set_footer(text="Data from aya.gg")
+			embed.set_footer(text="이하봇 • 팀 루멘트가 ♥️로 제작")
 			embed.description = "데이터 획득 중..."
 			await i.edit_original_message(embed=embed, attachments=None)
 			match = await getRecord_Match(int(self.values[0].split('.')[2]), self._userId)
-			embed = disnake.Embed(
-				title=f"{match['recordedName']}님의 전적"
-			)
 			embed.description = "이미지 제작 중..."
 			await i.edit_original_message(embed=embed)
 			error = generateRecordImage(match, disable={"nickname": getMemberSetting(i.user.id, i.guild.id, "hideNick"), "gameId": getMemberSetting(i.user.id, i.guild.id, "hideGameId")})

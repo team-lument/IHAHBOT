@@ -30,7 +30,7 @@ class Rotation(commands.Cog):
 	):
 		embed = disnake.Embed(
 			title=f"일주일 무료 실험체"
-		)
+		).set_footer(text="이하봇 • 팀 루멘트가 ♥️로 제작")
 		async with aiohttp.ClientSession(headers=API_HEADER) as session:
 			async with session.get(API_URL + f'/v1/freeCharacters/2') as req:
 				r = json.loads(await req.text()); characterName = []
