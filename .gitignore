@@ -5,3 +5,5 @@ image/*
 test/
 Match/
 Match/*
+
+config.py
