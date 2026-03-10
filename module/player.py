@@ -46,13 +46,13 @@ async def getUserId(nick: str):
 				r = await res.json()
 				if r['code'] == 404:
 					return None
-				c.execute(f"SELECT * FROM player WHERE userId={r['user']['userNum']}")
+				c.execute(f"SELECT * FROM player WHERE userId={r['user']['userId']}")
 				if c.fetchone():
-					c.execute(f"UPDATE player SET nickname='{nick}' WHERE userId={r['user']['userNum']}")
+					c.execute(f"UPDATE player SET nickname='{nick}' WHERE userId={r['user']['userId']}")
 				else:
-					c.execute(f"INSERT INTO player(userId, nickname) VALUES({r['user']['userNum']}, '{nick}')")
+					c.execute(f"INSERT INTO player(userId, nickname) VALUES({r['user']['userId']}, '{nick}')")
 				conn.commit()
-				return r['user']['userNum']
+				return r['user']['userId']
 	return n[0]
 
 def getUserNickname(userId: int):

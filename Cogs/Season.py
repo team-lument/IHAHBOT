@@ -2,7 +2,7 @@ import disnake, aiohttp, json, datetime, time
 from config import API_URL, API_HEADER
 from disnake.ext import commands
 from module.embed import makeErrorEmbed
-from module.variables import getSeason, nowSeason
+from module.variables import getSeason
 
 class Season(commands.Cog):
 	def __init__(self, bot):
@@ -35,13 +35,21 @@ class Season(commands.Cog):
 					return
 		nowSeason = 0
 		for x in r['data']: nowSeason = x['seasonID'] if x['isCurrent'] == True else nowSeason
-		endtime = datetime.datetime.strptime(str(r['data'][nowSeason]['seasonEnd']), "%Y-%m-%d %H:%M:%S")
+		seasonEndTime = str(r['data'][nowSeason]['seasonEnd'])
+		startTime = datetime.datetime.strptime(r['data'][nowSeason]['seasonStart'], "%Y-%m-%d %H:%M:%S")
+		endTime = datetime.datetime.strptime(seasonEndTime, "%Y-%m-%d %H:%M:%S")
+		progress = ((datetime.datetime.now() - startTime) / (endTime - startTime)) * 100
+		progress = max(0, min(progress, 100))
+
+		remain_time = endTime - datetime.datetime.now()
 		embed = disnake.Embed(
-			title="남은 시즌 기간",
-			description=f"{getSeason(nowSeason)}"
+			title=f"{getSeason(nowSeason)}",
+			description=f"{progress:.2f}% 진행됨",
+			color=0x00ff00
 		)
-		embed.add_field(name="종료 일시", value=f"<t:{int(time.mktime(endtime.timetuple()))}:F>\n<t:{int(time.mktime(endtime.timetuple()))}:R>")
-		embed.set_footer(text="표기 종료 일시는 현재 본인의 시간대로 표시됩니다.")
+		embed.add_field(name="시즌 종료", value=f"{endTime.strftime('%y-%m-%d %H:%M')} (KST)")
+		embed.add_field(name="남은 시간", value=f"{remain_time.days}일 {remain_time.seconds//3600}시간 {(remain_time.seconds//60)%60}분 {remain_time.seconds%60}초")
+		embed.set_footer(text="이하봇 • 팀 루멘트가 ♥️로 제작")
 		await i.response.send_message(embed=embed)
 
 def setup(bot: commands.Bot):
