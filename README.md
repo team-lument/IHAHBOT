@@ -17,7 +17,7 @@ No.1 Korean Eternal Return Discord Bot
 
 기본적으로 이하봇을 운영할 때 사용하던 파일들은 저작권 문제로 인해 일부가 제공되지 않습니다. 따라서 직접 이미지를 찾아야 하는데, 이는 [이터널 리턴 팬키트](https://playeternalreturn.com/fankit)에서 찾아 올바른 위치에 넣거나 UI의 경우는 직접 제작하여 사용할 수도 있습니다.
 
-이미지 파일을 어떻게 넣어야 하는지 등 이미지 폴더 규격에 대해서는 별도의 파일을 참고해주세요. (작성중)
+이미지 파일을 어떻게 넣어야 하는지 등 이미지 폴더 규격에 대해서는 [image/IMAGE.md](https://github.com/team-lument/IHAHBOT/blob/main/image/IMAGE.md)를 참고해주세요.
 
 ## 기여하기
 오픈소스 기여는 언제나 환영합니다. 아래 규칙을 지킨 채 PR로 넣어주시면 확인 후 반영하겠습니다.
