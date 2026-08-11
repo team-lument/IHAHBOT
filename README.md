@@ -1,6 +1,9 @@
 # IHAHBOT (이하봇)
 No.1 Korean Eternal Return Discord Bot
 
+## Links
+- [이하봇 박물관](https://raiiiny.notion.site/346193decfc280c5a24de26d53a4ee88?pvs=143)
+
 ## 개발하기
 이하봇은 2021년에 discord.py로 개발되었다가, 2022년부터 [disnake](https://disnake.dev/) 기반으로 개발된 Components v1 (가칭) 이터널 리턴 전적 검색 및 유틸리티 디스코드 봇입니다. 따라서 디스코드 봇의 작동 방식과 disnake의 사용 방법, 이터널 리턴에 대한 기본적인 지식이 필요합니다.
 
